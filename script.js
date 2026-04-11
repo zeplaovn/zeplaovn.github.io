@@ -36,15 +36,22 @@ function type() {
 }
 window.onload = type;
 
-// --- Accordion ---
+// --- Accordion Toggle ---
 function toggleSkill(element) {
     const content = element.nextElementSibling;
+    const icon = element.querySelector('.icon');
+    const title = element.querySelector('span');
+
     if (content.style.maxHeight) {
         content.style.maxHeight = null;
-        element.querySelector('.icon').style.transform = "rotate(0deg)";
+        content.style.paddingBottom = "0";
+        icon.style.transform = "rotate(0deg)";
+        title.innerText = title.innerText.replace('[-]', '[+]');
     } else {
         content.style.maxHeight = content.scrollHeight + "px";
-        element.querySelector('.icon').style.transform = "rotate(180deg)";
+        content.style.paddingBottom = "15px";
+        icon.style.transform = "rotate(180deg)";
+        title.innerText = title.innerText.replace('[+]', '[-]');
     }
 }
 

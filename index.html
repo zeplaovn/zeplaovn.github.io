@@ -6,6 +6,7 @@
     <title>zeplaovn | Cybersecurity Portfolio</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500&display=swap" rel="stylesheet">
+    <meta name="description" content="Portfolio của zeplaovn - Security Researcher & CTF Player">
 </head>
 <body>
     <div class="scanlines"></div>
@@ -15,10 +16,10 @@
         <nav class="main-content">
             <div class="logo">ZEPLAO<span>VN</span></div>
             <ul class="nav-menu">
-                <li><a href="#about"> About</a></li>
-                <li><a href="#skills"> Skills</a></li>
-                <li><a href="#profiles"> Profiles</a></li>
-                <li><a href="#ctf"> CTF</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#profiles">Profiles</a></li>
+                <li><a href="#ctf">CTF</a></li>
             </ul>
         </nav>
     </header>
@@ -43,7 +44,7 @@
 
             <section id="about" class="glass-card neon-border">
                 <h2>## 01. Giới thiệu</h2>
-                <p>Chào mọi người, mình là một chuyên gia bảo mật. Chuyên sâu vào <span class="neon-text">Web Exploitation</span>, <span class="neon-text">Pwn</span> và <span class="neon-text">Reverse Engineering</span>.</p>
+                <p>Chào mọi người, mình là một chuyên gia bảo mật đầy nhiệt huyết. Chuyên sâu vào <strong>Web Exploitation</strong>, <strong>Pwn</strong> và <strong>Reverse Engineering</strong>. Sứ mệnh của mình là tìm ra lỗ hổng trước khi kẻ xấu làm điều đó.</p>
             </section>
 
             <section id="skills" class="glass-card neon-border">
@@ -55,16 +56,30 @@
                             <span class="icon">▼</span>
                         </div>
                         <div class="skill-content">
-                            <p>Sử dụng <strong>Burp Suite, SQLMap, Gobuster</strong> để khai thác các lỗ hổng ứng dụng web.</p>
+                            <p><strong>Công cụ:</strong> Burp Suite, SQLMap, Gobuster, Ffuf.</p>
+                            <p><strong>Cách hoạt động:</strong> Phân tích lưu lượng HTTP, brute-force thư mục ẩn và khai thác các lỗ hổng như SQLi, XSS, SSRF, IDOR để kiểm tra tính bảo mật của ứng dụng web.</p>
                         </div>
                     </div>
+
                     <div class="skill-item">
                         <div class="skill-header" onclick="toggleSkill(this)">
-                            <span>[+] Reverse & Pwn</span>
+                            <span>[+] Reverse Engineering & Pwn</span>
                             <span class="icon">▼</span>
                         </div>
                         <div class="skill-content">
-                            <p>Phân tích mã máy với <strong>Ghidra, GDB</strong> và khai thác lỗi bộ nhớ.</p>
+                            <p><strong>Công cụ:</strong> GDB, Ghidra, IDA Pro, Pwntools.</p>
+                            <p><strong>Cách hoạt động:</strong> Phân tích mã máy (Assembly), tìm kiếm các lỗi quản lý bộ nhớ (Buffer Overflow, Use-After-Free) và viết mã khai thác để thực thi lệnh trái phép.</p>
+                        </div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-header" onclick="toggleSkill(this)">
+                            <span>[+] Infrastructure & Scripting</span>
+                            <span class="icon">▼</span>
+                        </div>
+                        <div class="skill-content">
+                            <p><strong>Công cụ:</strong> Linux, Docker, Python, Bash.</p>
+                            <p><strong>Cách hoạt động:</strong> Xây dựng môi trường lab an toàn, tự động hóa các tác vụ rà quét lỗ hổng bằng script và quản trị hệ thống Linux bảo mật.</p>
                         </div>
                     </div>
                 </div>
@@ -72,13 +87,13 @@
 
             <section id="profiles" class="glass-card neon-border">
                 <h2>## 03. My Profiles</h2>
-                <div class="profile-container">
-                    <a href="https://play.picoctf.org/users/zeplaovn" target="_blank" class="neon-btn">PicoCTF</a>
-                    <a href="https://bugcrowd.com/h/zeplaovn" target="_blank" class="neon-btn">Bugcrowd</a>
-                    <a href="https://www.root-me.org/4tt4ck_53rV3r?lang=en" target="_blank" class="neon-btn">Root Me</a>
-                    <a href="https://pwnable.kr/index.php" target="_blank" class="neon-btn">PWNABLE</a>
-                    <a href="https://app.hackthebox.com/profile/2093249" target="_blank" class="neon-btn">Hack The Box</a>
-                    <a href="https://pwn.college/hacker/zeplaovn" target="_blank" class="neon-btn">pwn.college</a>
+                <div class="profile-grid">
+                    <a href="https://play.picoctf.org/users/zeplaovn" target="_blank" class="profile-link">PicoCTF</a>
+                    <a href="https://bugcrowd.com/h/zeplaovn" target="_blank" class="profile-link">Bugcrowd</a>
+                    <a href="https://www.root-me.org/4tt4ck_53rV3r?lang=en" target="_blank" class="profile-link">Root Me</a>
+                    <a href="https://pwnable.kr/index.php" target="_blank" class="profile-link">PWNABLE</a>
+                    <a href="https://app.hackthebox.com/profile/2093249" target="_blank" class="profile-link">Hack The Box</a>
+                    <a href="https://pwn.college/hacker/zeplaovn" target="_blank" class="profile-link">pwn.college</a>
                 </div>
             </section>
 
@@ -90,18 +105,27 @@
                             <tr>
                                 <th>Giải đấu</th>
                                 <th>Thứ hạng</th>
+                                <th>Thành tích</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr><td>PicoCTF</td><td class="neon-text">Top 1%</td></tr>
-                            <tr><td>KCSC CTF</td><td class="neon-text">Top 10</td></tr>
+                            <tr>
+                                <td>PicoCTF</td>
+                                <td class="highlight">Top 1%</td>
+                                <td>Completed all Web challenges</td>
+                            </tr>
+                            <tr>
+                                <td>KCSC CTF</td>
+                                <td class="highlight">Top 10</td>
+                                <td>First Blood: Pwn 01</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </section>
 
             <footer>
-                <p>&copy; 2026 zeplaovn. <span class="neon-text">Secure Your World.</span></p>
+                <p>&copy; 2026 zeplaovn. <span class="highlight">Secure Your World.</span> <span class="blink">_</span></p>
             </footer>
         </div>
     </div>
