@@ -1,7 +1,9 @@
 :root {
     --primary: #00ff41;
-    --bg-dark: #000;
-    --glass: rgba(0, 0, 0, 0.9); /* Làm cho kính đậm hơn để dễ đọc trên nền Matrix */
+    --primary-dim: rgba(0, 255, 65, 0.2);
+    --bg-dark: #000800;
+    --glass: rgba(0, 10, 0, 0.85);
+    --text-white: #e0e0e0;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -11,89 +13,108 @@ body, html {
     color: var(--primary);
     font-family: 'Fira Code', monospace;
     overflow-x: hidden;
-    height: 100%; /* Cần thiết cho Canvas */
+    height: 100%;
+    scroll-behavior: smooth;
 }
 
-/* --- Cập nhật nền Matrix --- */
+/* Hiệu ứng đường quét TV cũ */
+.scanlines {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 4px, 3px 100%;
+    z-index: 10;
+    pointer-events: none;
+}
+
 #matrixCanvas {
-    position: fixed; /* Cố định vị trí */
-    top: 0;
-    left: 0;
-    width: 100vw; /* Bao phủ chiều rộng màn hình */
-    height: 100vh; /* Bao phủ chiều cao màn hình */
-    z-index: 0; /* Lớp nền */
+    position: fixed;
+    top: 0; left: 0;
+    z-index: 0;
+    opacity: 0.6;
 }
 
-/* --- Lớp bao phủ nội dung --- */
 .page-wrapper {
-    position: relative; /* Đảm bảo nội dung nằm TRÊN Canvas */
-    z-index: 1; /* Lớp hiển thị */
+    position: relative;
+    z-index: 1;
     width: 100%;
-    min-height: 100vh; /* Chiều cao tối thiểu toàn trang */
 }
 
 .main-content {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 20px;
 }
 
-/* --- Music Player (Vị trí Cố định) --- */
+/* Music Player */
 .music-player {
     position: fixed;
-    top: 20px; 
-    right: 20px;
-    z-index: 100; /* Nằm trên tất cả */
+    top: 20px; right: 20px;
+    z-index: 100;
     background: var(--glass);
     border: 1px solid var(--primary);
-    padding: 10px;
-    text-align: center;
+    padding: 15px;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 0 15px var(--primary-dim);
 }
 
 #playBtn {
     background: transparent;
     color: var(--primary);
     border: 1px solid var(--primary);
+    padding: 5px 10px;
     cursor: pointer;
-    font-family: inherit;
-    font-size: 10px;
-    margin-top: 5px;
+    font-size: 12px;
+    transition: 0.3s;
 }
-#playBtn:hover { background: var(--primary); color: #000; }
+#playBtn:hover { background: var(--primary); color: #000; box-shadow: 0 0 10px var(--primary); }
 
-/* --- Navigation & Typography (Giữ nguyên) --- */
-header { padding: 40px 0; }
-nav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
-.nav-menu { display: flex; list-style: none; gap: 20px; }
-.nav-menu a { color: var(--primary); text-decoration: none; font-size: 0.9rem; }
-.nav-menu a:hover { text-shadow: 0 0 8px var(--primary); }
-.logo { font-size: 1.5rem; font-weight: bold; }
-.logo span { background: var(--primary); color: #000; padding: 0 5px; }
+/* Typography & Nav */
+header { padding: 30px 0; }
+nav { display: flex; justify-content: space-between; align-items: center; }
+.nav-menu { display: flex; list-style: none; gap: 25px; }
+.nav-menu a { color: var(--primary); text-decoration: none; font-size: 0.9rem; opacity: 0.8; }
+.nav-menu a:hover { opacity: 1; text-shadow: 0 0 10px var(--primary); }
+.logo { font-size: 1.5rem; letter-spacing: 2px; }
+.logo span { background: var(--primary); color: #000; padding: 0 5px; margin-left: 5px; }
 
-/* --- Section Styling (Làm đậm Glass) --- */
+/* Cards */
 .glass-card {
     background: var(--glass);
-    padding: 30px;
-    margin-bottom: 40px;
-    border: 1px solid rgba(0, 255, 65, 0.4); /* Làm nổi bật viền */
-    border-radius: 4px;
+    padding: 35px;
+    margin-bottom: 30px;
+    border: 1px solid var(--primary-dim);
+    border-left: 4px solid var(--primary);
+    transition: 0.3s;
 }
-h2 { margin-bottom: 20px; font-size: 1.2rem; border-bottom: 1px solid var(--primary); padding-bottom: 10px; }
+.glass-card:hover { border-color: var(--primary); box-shadow: 0 0 20px var(--primary-dim); }
 
-/* --- Grid, Table & Hero (Giữ nguyên) --- */
-.skill-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
-.skill-card { border: 1px solid var(--primary); padding: 15px; text-align: center; }
-.table-container { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; min-width: 500px; background: rgba(0,0,0,0.5); }
-th, td { border: 1px solid var(--primary); padding: 12px; text-align: left; }
-#hero { height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center; }
-.highlight { color: #fff; text-shadow: 0 0 10px var(--primary); }
-.blink { animation: blink 1s infinite; }
+h2 { margin-bottom: 20px; color: var(--text-white); font-size: 1.3rem; }
+
+/* Skills Grid */
+.skill-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; }
+.skill-card { 
+    background: rgba(0, 255, 65, 0.05);
+    border: 1px solid var(--primary-dim);
+    padding: 20px;
+    text-align: center;
+    transition: 0.3s ease;
+}
+.skill-card:hover { transform: translateY(-5px); background: var(--primary-dim); }
+.skill-icon { font-size: 2rem; display: block; margin-bottom: 10px; }
+
+/* Table */
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+th { background: var(--primary-dim); color: var(--primary); }
+th, td { border: 1px solid var(--primary-dim); padding: 15px; text-align: left; }
+
+#hero { height: 70vh; flex-direction: column; display: flex; align-items: center; justify-content: center; }
+.highlight { color: #fff; text-shadow: 0 0 15px var(--primary); }
+.blink { animation: blink 1s infinite; font-weight: bold; }
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-/* --- Responsive Mobile (Giữ nguyên) --- */
 @media (max-width: 600px) {
-    .nav-menu { width: 100%; justify-content: space-between; font-size: 0.8rem; }
-    h1 { font-size: 1.2rem; }
-    .music-player { top: auto; bottom: 20px; right: 20px; }
+    .nav-menu { display: none; } /* Ẩn menu trên mobile để clean */
+    .music-player { bottom: 20px; top: auto; width: calc(100% - 40px); left: 20px; }
 }
