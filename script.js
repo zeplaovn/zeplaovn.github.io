@@ -1,16 +1,20 @@
-// 1. Hiệu ứng Matrix Rain
+// Hiệu ứng Matrix Rain
 const canvas = document.getElementById('matrixCanvas');
 const ctx = canvas.getContext('2d');
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
 
-const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%";
+const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*";
 const fontSize = 16;
 const columns = canvas.width / fontSize;
 const drops = Array(Math.floor(columns)).fill(1);
 
-function drawMatrix() {
+function draw() {
     ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
@@ -18,7 +22,7 @@ function drawMatrix() {
     ctx.font = fontSize + "px monospace";
 
     for (let i = 0; i < drops.length; i++) {
-        const text = chars.charAt(Math.floor(Math.random() * chars.length));
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
         
         if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
@@ -27,24 +31,23 @@ function drawMatrix() {
         drops[i]++;
     }
 }
+setInterval(draw, 35);
 
-// 2. Điều khiển nhạc
+// Trình phát nhạc
 const music = document.getElementById("bgMusic");
+const statusText = document.getElementById("status");
+const btn = document.getElementById("playBtn");
+
 function toggleMusic() {
-    const btn = document.getElementById("musicBtn");
     if (music.paused) {
         music.play();
-        btn.innerText = "PAUSE";
+        btn.innerText = "PAUSE AUDIO";
+        statusText.innerText = "ONLINE";
+        statusText.style.color = "#00ff41";
     } else {
         music.pause();
-        btn.innerText = "PLAY";
+        btn.innerText = "PLAY AUDIO";
+        statusText.innerText = "OFFLINE";
+        statusText.style.color = "red";
     }
 }
-
-// 3. Xử lý khi resize màn hình (Responsive)
-window.onresize = () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-};
-
-setInterval(drawMatrix, 35);

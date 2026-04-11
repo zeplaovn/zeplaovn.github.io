@@ -1,62 +1,109 @@
 :root {
     --primary: #00ff41;
-    --bg-dark: rgba(10, 10, 10, 0.9);
+    --bg-dark: #0a0a0a;
+    --glass: rgba(10, 10, 10, 0.85);
 }
 
-body, html {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-    background: #000;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background-color: #000;
+    color: var(--primary);
     font-family: 'Fira Code', monospace;
+    overflow-x: hidden;
 }
 
-/* Matrix Canvas */
+/* Matrix Background */
 #matrixCanvas {
     position: fixed;
-    top: 0;
-    left: 0;
+    top: 0; left: 0;
     z-index: -1;
 }
 
-.content-wrapper {
-    position: relative;
-    z-index: 1;
+.main-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
-/* Trình phát nhạc */
+/* Music Player */
 .music-player {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: var(--bg-dark);
+    top: 20px; right: 20px;
+    z-index: 100;
+    background: var(--glass);
     border: 1px solid var(--primary);
     padding: 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 12px;
+    text-align: center;
 }
 
-#musicBtn {
-    background: var(--primary);
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-/* Card hiệu ứng kính (Glassmorphism) */
-.terminal-card {
-    background: rgba(0, 0, 0, 0.8);
+#playBtn {
+    background: transparent;
+    color: var(--primary);
     border: 1px solid var(--primary);
-    padding: 2rem;
-    box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
-    margin: 20px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 10px;
+    margin-top: 5px;
 }
 
-/* Responsive cho di động */
-@media (max-width: 768px) {
-    .nav-links { display: none; } /* Ẩn menu trên mobile để tối giản */
-    h1 { font-size: 1.5rem; }
-    .music-player { width: calc(100% - 40px); left: 20px; }
+#playBtn:hover { background: var(--primary); color: #000; }
+
+/* Navigation */
+header { padding: 40px 0; }
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.nav-menu { display: flex; list-style: none; gap: 20px; }
+.nav-menu a { color: var(--primary); text-decoration: none; font-size: 0.9rem; }
+.nav-menu a:hover { text-shadow: 0 0 8px var(--primary); }
+
+.logo { font-size: 1.5rem; font-weight: bold; }
+.logo span { background: var(--primary); color: #000; padding: 0 5px; }
+
+/* Section Styling */
+.glass-card {
+    background: var(--glass);
+    padding: 30px;
+    margin-bottom: 40px;
+    border: 1px solid rgba(0, 255, 65, 0.2);
+    border-radius: 4px;
+}
+
+h2 { margin-bottom: 20px; font-size: 1.2rem; }
+
+/* Grid & Table */
+.skill-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.skill-card {
+    border: 1px solid var(--primary);
+    padding: 15px;
+    text-align: center;
+}
+
+.table-container { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 500px; }
+th, td { border: 1px solid var(--primary); padding: 12px; text-align: left; }
+
+/* Hero Section */
+#hero { height: 50vh; display: flex; align-items: center; }
+.highlight { color: #fff; text-shadow: 0 0 10px var(--primary); }
+
+.blink { animation: blink 1s infinite; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* Responsive Mobile */
+@media (max-width: 600px) {
+    .nav-menu { width: 100%; justify-content: space-between; font-size: 0.8rem; }
+    h1 { font-size: 1.2rem; }
+    .music-player { top: auto; bottom: 20px; right: 20px; }
 }
