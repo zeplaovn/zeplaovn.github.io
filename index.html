@@ -6,59 +6,99 @@
     <title>zeplaovn | Cybersecurity Portfolio</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500&display=swap" rel="stylesheet">
+    <meta name="description" content="Portfolio của zeplaovn - Security Researcher & CTF Player">
 </head>
 <body>
-
+    <div class="scanlines"></div>
     <canvas id="matrixCanvas"></canvas>
 
     <div class="music-player">
         <div id="status">OFFLINE</div>
-        <button id="playBtn" onclick="toggleMusic()">PLAY AUDIO</button>
+        <button id="playBtn" onclick="toggleMusic()">[ PLAY AUDIO ]</button>
         <audio id="bgMusic" loop>
             <source src="Lost-Jay Hardway.mp3" type="audio/mpeg">
         </audio>
     </div>
-    
+
+    <header id="navbar">
+        <nav class="main-content">
+            <div class="logo">ZEPLAO<span>VN</span></div>
+            <ul class="nav-menu">
+                <li><a href="#about">// About</a></li>
+                <li><a href="#skills">// Skills</a></li>
+                <li><a href="#profiles">// Profiles</a></li>
+                <li><a href="#ctf">// CTF</a></li>
+            </ul>
+        </nav>
+    </header>
 
     <div class="page-wrapper">
         <div class="main-content">
-            <header>
-                <nav>
-                    <div class="logo">ZEPLAO<span>VN</span></div>
-                    <ul class="nav-menu">
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#skills">Skills</a></li>
-                        <li><a href="#ctf">CTF</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                </nav>
-            </header>
-
             <section id="hero">
                 <div class="terminal-text">
                     <h1>> System.init(<span class="highlight">"zeplaovn"</span>);</h1>
-                    <p>Cyber Security Enthusiast | CTF Player | Security Researcher</p>
+                    <p id="typewriter"></p>
                     <div class="cursor"></div>
                 </div>
             </section>
 
             <section id="about" class="glass-card">
-                <h2>## Giới thiệu</h2>
-                <p>Chào moi nguoi, là một người đam mê bảo mật thông tin. Chuyên giải quyết các thử thách liên quan đến Web Exploitation, Pwn và Reverse Engineering. Mục tiêu của mình là bảo vệ không gian mạng an toàn hơn.</p>
+                <h2>## 01. Giới thiệu</h2>
+                <p>Chào mọi người, mình là một chuyên gia bảo mật đầy nhiệt huyết. Chuyên sâu vào <strong>Web Exploitation</strong>, <strong>Pwn</strong> và <strong>Reverse Engineering</strong>. Sứ mệnh của mình là tìm ra lỗ hổng trước khi kẻ xấu làm điều đó.</p>
             </section>
 
             <section id="skills" class="glass-card">
-                <h2>## Kỹ năng</h2>
-                <div class="skill-grid">
-                    <div class="skill-card">Penetration Testing</div>
-                    <div class="skill-card">Linux Admin</div>
-                    <div class="skill-card">Python / Bash</div>
-                    <div class="skill-card">Network Security</div>
+                <h2>## 02. Kỹ năng & Công cụ</h2>
+                <div class="skill-accordion">
+                    <div class="skill-item">
+                        <div class="skill-header" onclick="toggleSkill(this)">
+                            <span>[+] Web Exploitation</span>
+                            <span class="icon">▼</span>
+                        </div>
+                        <div class="skill-content">
+                            <p><strong>Công cụ:</strong> Burp Suite, SQLMap, Gobuster, Ffuf.</p>
+                            <p><strong>Cách hoạt động:</strong> Phân tích lưu lượng HTTP, brute-force thư mục ẩn và khai thác các lỗ hổng như SQLi, XSS, SSRF, IDOR để kiểm tra tính bảo mật của ứng dụng web.</p>
+                        </div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-header" onclick="toggleSkill(this)">
+                            <span>[+] Reverse Engineering & Pwn</span>
+                            <span class="icon">▼</span>
+                        </div>
+                        <div class="skill-content">
+                            <p><strong>Công cụ:</strong> GDB, Ghidra, IDA Pro, Pwntools.</p>
+                            <p><strong>Cách hoạt động:</strong> Phân tích mã máy (Assembly), tìm kiếm các lỗi quản lý bộ nhớ (Buffer Overflow, Use-After-Free) và viết mã khai thác để thực thi lệnh trái phép.</p>
+                        </div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-header" onclick="toggleSkill(this)">
+                            <span>[+] Infrastructure & Scripting</span>
+                            <span class="icon">▼</span>
+                        </div>
+                        <div class="skill-content">
+                            <p><strong>Công cụ:</strong> Linux, Docker, Python, Bash.</p>
+                            <p><strong>Cách hoạt động:</strong> Xây dựng môi trường lab an toàn, tự động hóa các tác vụ rà quét lỗ hổng bằng script và quản trị hệ thống Linux bảo mật.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="profiles" class="glass-card">
+                <h2>## 03. My Profiles</h2>
+                <div class="profile-grid">
+                    <a href="https://play.picoctf.org/users/zeplaovn" target="_blank" class="profile-link">PicoCTF</a>
+                    <a href="https://bugcrowd.com/h/zeplaovn" target="_blank" class="profile-link">Bugcrowd</a>
+                    <a href="https://www.root-me.org/4tt4ck_53rV3r?lang=en" target="_blank" class="profile-link">Root Me</a>
+                    <a href="https://pwnable.kr/index.php" target="_blank" class="profile-link">PWNABLE</a>
+                    <a href="https://app.hackthebox.com/profile/2093249" target="_blank" class="profile-link">Hack The Box</a>
+                    <a href="https://pwn.college/hacker/zeplaovn" target="_blank" class="profile-link">pwn.college</a>
                 </div>
             </section>
 
             <section id="ctf" class="glass-card">
-                <h2>## Thành tích CTF</h2>
+                <h2>## 04. Thành tích CTF</h2>
                 <div class="table-container">
                     <table>
                         <thead>
@@ -71,12 +111,12 @@
                         <tbody>
                             <tr>
                                 <td>PicoCTF</td>
-                                <td>Top 1%</td>
+                                <td class="highlight">Top 1%</td>
                                 <td>Completed all Web challenges</td>
                             </tr>
                             <tr>
                                 <td>KCSC CTF</td>
-                                <td>Top 10</td>
+                                <td class="highlight">Top 10</td>
                                 <td>First Blood: Pwn 01</td>
                             </tr>
                         </tbody>
@@ -85,11 +125,10 @@
             </section>
 
             <footer>
-                <p>&copy; 2026 zeplaovn. All rights reserved. <span class="blink">_</span></p>
+                <p>&copy; 2026 zeplaovn. <span class="highlight">Secure Your World.</span> <span class="blink">_</span></p>
             </footer>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
