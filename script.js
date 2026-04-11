@@ -6,12 +6,12 @@ window.addEventListener('resize', resize);
 resize();
 
 const letters = "0101010101010101ABCDEFHIJKLMNOPQRSTUVWXYZ";
-const fontSize = 14;
+const fontSize = 16;
 const columns = canvas.width / fontSize;
 const drops = Array(Math.floor(columns)).fill(1);
 
 function drawMatrix() {
-    ctx.fillStyle = "rgba(0, 8, 0, 0.1)";
+    ctx.fillStyle = "rgba(0, 8, 0, 0.15)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "#00ff41";
     ctx.font = fontSize + "px monospace";
@@ -22,53 +22,46 @@ function drawMatrix() {
         drops[i]++;
     }
 }
-setInterval(drawMatrix, 40);
+setInterval(drawMatrix, 50);
 
 // --- Typewriter ---
-const message = "Cyber Security Enthusiast | CTF Player | Security Researcher";
+const message = "Cyber Security Enthusiast | CTF Player | Researcher";
 let index = 0;
 function type() {
     if (index < message.length) {
         document.getElementById("typewriter").innerHTML += message.charAt(index);
         index++;
-        setTimeout(type, 50);
+        setTimeout(type, 60);
     }
 }
 window.onload = type;
 
-// --- Accordion Skill ---
+// --- Accordion ---
 function toggleSkill(element) {
     const content = element.nextElementSibling;
-    const icon = element.querySelector('.icon');
-    const title = element.querySelector('span');
-
     if (content.style.maxHeight) {
         content.style.maxHeight = null;
-        content.style.paddingBottom = "0";
-        icon.style.transform = "rotate(0deg)";
-        title.innerText = title.innerText.replace('[-]', '[+]');
+        element.querySelector('.icon').style.transform = "rotate(0deg)";
     } else {
         content.style.maxHeight = content.scrollHeight + "px";
-        content.style.paddingBottom = "15px";
-        icon.style.transform = "rotate(180deg)";
-        title.innerText = title.innerText.replace('[+]', '[-]');
+        element.querySelector('.icon').style.transform = "rotate(180deg)";
     }
 }
 
-// --- Music Player ---
+// --- Music ---
 const music = document.getElementById("bgMusic");
-const statusText = document.getElementById("status");
-const btn = document.getElementById("playBtn");
 function toggleMusic() {
+    const btn = document.getElementById("playBtn");
+    const status = document.getElementById("status");
     if (music.paused) {
-        music.play().catch(e => console.log("Blocked"));
+        music.play();
         btn.innerText = "[ PAUSE AUDIO ]";
-        statusText.innerText = "ONLINE";
-        statusText.style.color = "#00ff41";
+        status.innerText = "ONLINE";
+        status.style.color = "#00ff41";
     } else {
         music.pause();
         btn.innerText = "[ PLAY AUDIO ]";
-        statusText.innerText = "OFFLINE";
-        statusText.style.color = "red";
+        status.innerText = "OFFLINE";
+        status.style.color = "red";
     }
 }
