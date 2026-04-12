@@ -1,3 +1,6 @@
+/* =========================================
+   1. CẤU HÌNH BIẾN & RESET
+   ========================================= */
 :root {
   --neon-green: #00ff41;
   --neon-glow: 0 0 10px rgba(0, 255, 65, 0.7), 0 0 20px rgba(0, 255, 65, 0.4);
@@ -25,23 +28,9 @@ a {
   color: var(--neon-green);
 }
 
-.table-container {
-  width: 100%;
-  overflow-x: auto;
-  /* Cho phép cuộn ngang nếu bảng quá rộng */
-  border: 1px solid var(--primary-dim);
-  /* Giữ style đồng bộ */
-  margin-top: 15px;
-}
-
-table {
-  width: 100%;
-  min-width: 500px;
-  /* Ép bảng không được nhỏ hơn mức này để tránh nát chữ */
-  border-collapse: collapse;
-}
-
-/* Nền Matrix */
+/* =========================================
+   2. HIỆU ỨNG NỀN (SCANLINES)
+   ========================================= */
 #matrixCanvas {
   position: fixed;
   top: 0;
@@ -49,44 +38,6 @@ table {
   z-index: -1;
   opacity: 0.4;
 }
-
-/* Custom Terminal Look */
-.terminal-header {
-    background: #1a1a1a;
-    padding: 8px 12px;
-    border-radius: 4px 4px 0 0;
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid var(--primary-dim);
-}
-
-.terminal-title {
-    margin-left: 15px;
-    font-size: 0.75rem;
-    opacity: 0.7;
-}
-
-.dot {
-    height: 10px;
-    width: 10px;
-    border-radius: 50%;
-    margin-right: 6px;
-}
-
-.red { background: #ff5f56; }
-.yellow { background: #ffbd2e; }
-.green { background: #27c93f; }
-
-.terminal-body {
-    padding: 15px;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 0 0 4px 4px;
-}
-
-.terminal-body b {
-    color: #fff;
-} 
-
 
 .scanlines {
   position: fixed;
@@ -97,19 +48,12 @@ table {
   background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
   background-size: 100% 3px;
   z-index: 999;
-  pointer-events: none;
+  pointer-events: none; /* Cho phép click xuyên qua lớp phủ */
 }
 
-.tool {
-  background: rgba(0, 255, 255, 0.1);
-  color: #00ffff;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-family: 'Courier New', monospace;
-  font-size: 0.9em;
-}
-
-/* Menu Cố định */
+/* =========================================
+   3. HEADER & NAVIGATION
+   ========================================= */
 header {
   position: sticky;
   top: 0;
@@ -120,29 +64,12 @@ header {
   backdrop-filter: blur(10px);
 }
 
-/*nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 0;
-}*/
-
-.nav-menu {
+nav {
   display: flex;
-  list-style: none;
-  gap: 20px;
-}
-
-.nav-menu a {
-  color: var(--neon-green);
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: 0.3s;
-}
-
-.nav-menu a:hover {
-  text-shadow: var(--neon-glow);
-  color: #fff;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  width: 100%;
 }
 
 .logo {
@@ -156,8 +83,132 @@ header {
   padding: 0 5px;
 }
 
+.nav-menu {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+}
 
-/* Nội dung chính */
+.nav-menu a {
+  font-size: 0.9rem;
+  transition: 0.3s;
+}
+
+.nav-menu a:hover {
+  text-shadow: var(--neon-glow);
+  color: #fff;
+}
+
+/* =========================================
+   4. BỐ CỤC CHÍNH (MAIN CONTENT)
+   ========================================= */
+
+/*Terminal */
+/* --- Section About & Terminal Container --- */
+#about {
+    margin-bottom: 40px;
+}
+
+.terminal-content {
+    background: rgba(0, 5, 0, 0.95); /* Đen sâu hơn để nổi bật text */
+    border: 1px solid var(--primary-dim);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    margin-top: 20px;
+}
+
+/* --- Terminal Header (Thanh tiêu đề cửa sổ) --- */
+.terminal-header {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--primary-dim);
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.red { background: #ff5f56; box-shadow: 0 0 5px #ff5f56; }
+.yellow { background: #ffbd2e; box-shadow: 0 0 5px #ffbd2e; }
+.green { background: #27c93f; box-shadow: 0 0 5px #27c93f; }
+
+.terminal-title {
+    color: #888;
+    font-size: 0.8rem;
+    margin-left: 10px;
+    font-family: 'Fira Code', monospace;
+}
+
+/* --- Terminal Body (Nội dung bên trong) --- */
+.terminal-body {
+    padding: 20px;
+    font-size: 0.95rem;
+    color: #e0e0e0; 
+}
+
+.terminal-body p {
+    margin-bottom: 12px;
+}
+
+.highlight {
+    color: var(--neon-green);
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 255, 65, 0.3);
+}
+
+/* List bio */
+.bio-list li {
+    margin-bottom: 10px;
+    position: relative;
+    transition: transform 0.2s ease;
+}
+
+.bio-list li:hover {
+    transform: translateX(5px);
+    color: var(--neon-green);
+}
+
+.bio-list li b {
+    color: var(--neon-green);
+}
+
+/* Triết lý & Trạng thái */
+.mission-statement {
+    font-style: italic;
+    background: rgba(0, 255, 65, 0.03);
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.mission-statement p {
+    margin-bottom: 5px;
+}
+
+/* Hiệu ứng Blink Status */
+.blink {
+    animation: blinker 1.5s linear infinite;
+    color: #ff4141; 
+}
+
+@keyframes blinker {
+    50% { opacity: 0; }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .terminal-body {
+        font-size: 0.85rem;
+        padding: 15px;
+    }
+}
+
+/*---------*/
 .main-content {
   max-width: 1000px;
   margin: 0 auto;
@@ -169,6 +220,7 @@ header {
   z-index: 1;
 }
 
+/* Thẻ dạng kính mờ (Glassmorphism) */
 .glass-card {
   background: var(--glass);
   padding: 30px;
@@ -182,34 +234,39 @@ header {
   box-shadow: -5px 0 15px rgba(0, 255, 65, 0.1);
 }
 
-/* Profile Buttons Neon */
-.profile-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 15px;
-  margin-top: 20px;
-}
-
-.profile-link {
-  border: 1px solid var(--neon-green);
-  padding: 12px;
+#hero {
+  height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  text-decoration: none;
-  color: var(--neon-green);
-  font-size: 0.8rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  transition: 0.3s all;
 }
 
-.profile-link:hover {
-  background: var(--neon-green);
-  color: #000;
-  box-shadow: var(--neon-glow);
-  transform: translateY(-3px);
+/* =========================================
+   5. CÁC THÀNH PHẦN CHI TIẾT (COMPONENTS)
+   ========================================= */
+
+/* Bảng xếp hạng / Dữ liệu */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--primary-dim);
+  margin-top: 15px;
 }
 
-/* Accordion Skills */
+table {
+  width: 100%;
+  min-width: 500px;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid var(--primary-dim);
+  padding: 12px;
+  text-align: left;
+}
+
+/* Skill Accordion - Danh sách kỹ năng thả xuống */
 .skill-item {
   border-bottom: 1px solid var(--primary-dim);
   margin-bottom: 5px;
@@ -223,103 +280,54 @@ header {
   align-items: center;
 }
 
-.skill-header:hover {
-  background: rgba(0, 255, 65, 0.05);
-}
+.skill-header:hover { background: rgba(0, 255, 65, 0.05); }
 
 .skill-content {
-  max-height: 0;
+  max-height: 0; /* JS sẽ thay đổi giá trị này để mở rộng */
   overflow: hidden;
   transition: 0.4s ease-out;
   background: rgba(0, 0, 0, 0.3);
   padding: 0 15px;
 }
 
-/* Hero & Utils */
-#hero {
-  height: 50vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+/* Profile Buttons */
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
 }
 
-.highlight {
-  color: #fff;
-  text-shadow: var(--neon-glow);
-}
-
-.music-player {
-  position: fixed;
-  top: 80px;
-  right: 20px;
-  z-index: 1001;
-  background: var(--glass);
+.profile-link {
   border: 1px solid var(--neon-green);
-  padding: 10px;
-}
-
-#playBtn {
-  background: transparent;
-  color: var(--neon-green);
-  border: 1px solid var(--neon-green);
-  padding: 5px;
-  cursor: pointer;
-  font-size: 10px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-}
-
-th,
-td {
-  border: 1px solid var(--primary-dim);
   padding: 12px;
-  text-align: left;
-}
-
-.blink {
-  animation: blink 1s infinite;
-}
-
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
-}
-
-.cursor {
-  color: var(--neon-green);
+  text-align: center;
+  font-size: 0.8rem;
   font-weight: bold;
-  margin-left: 5px;
+  text-transform: uppercase;
+  transition: 0.3s all;
 }
 
-.blink {
-  animation: blink 1s infinite;
+.profile-link:hover {
+  background: var(--neon-green);
+  color: #000;
+  box-shadow: var(--neon-glow);
+  transform: translateY(-3px);
 }
 
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
+/* Công cụ (Badge) */
+.tool {
+  background: rgba(0, 255, 255, 0.1);
+  color: #00ffff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
 }
 
-
-/* Music Player Nâng cao */
-
-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 0;
-  width: 100%;
-  /* Đảm bảo chiếm hết chiều ngang */
-}
-
-/* --- Gộp và tối ưu Music Player --- */
+/* =========================================
+   6. TRÌNH PHÁT NHẠC (MUSIC PLAYER)
+   ========================================= */
 .music-player {
   width: 260px;
   position: fixed;
@@ -334,105 +342,79 @@ nav {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Hiệu ứng thu nhỏ */
 .music-player.minimized {
   min-height: 20px;
-  width: 150px;
+  width: 200px;
 }
 
 .music-player.minimized .player-body {
   max-height: 0;
   opacity: 0;
   pointer-events: none;
-  margin: 0;
 }
 
+.player-header {
+    position: relative; /* Làm mốc tọa độ cho nút bấm */
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    min-height: 35px;
+}
 
-/* Sửa lỗi nút minimize bị dọc */
+/* Chữ SYSTEM OFFLINE */
+#status {
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+}
+
+/* Nút bấm ở góc trên bên phải */
 .minimize-btn {
-  background: rgba(0, 255, 65, 0.1);
-  border: 1px solid var(--primary-dim);
-  color: var(--neon-green);
-  cursor: pointer;
-  font-family: 'Fira Code', monospace;
-  font-size: 12px;
-  padding: 4px 10px;
-  /* Tăng padding để dễ bấm */
-  border-radius: 4px;
-  transition: all 0.3s ease;
-  outline: none;
-  display: inline-flex;
-  /* Sử dụng inline-flex để giữ trên 1 hàng */
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-  /* QUAN TRỌNG: Ngăn chữ bị xuống dòng */
-  min-width: 45px;
-  /* Đảm bảo độ rộng tối thiểu */
-  line-height: 1;
+    position: absolute;  
+    top: 1px;            
+    right: 5px;        
+    
+    background: transparent;
+    border-radius: 5px;
+    color: var(--neon-green);
+    cursor: pointer;
+    
+    /* Làm nút nhỏ lại */
+    font-size: 0.7rem; 
+    padding: 2px 5px;
+    font-family: 'Fira Code', monospace;
+    
+    /* Hiệu ứng */
+    transition: all 0.3s ease;
+    opacity: 0.7;        
 }
 
 .minimize-btn:hover {
-  background: var(--neon-green);
-  color: #000;
-  box-shadow: var(--neon-glow);
+    opacity: 1;          
+    text-shadow: var(--neon-glow);
 }
 
-/* Header của Player */
-.player-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-  padding-bottom: 5px;
-  border-bottom: 1px solid var(--primary-dim);
-  gap: 10px;
-  /* Tạo khoảng cách giữa chữ và nút */
-}
-
-#status {
-  font-size: 10px;
-  font-weight: bold;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-/* Nội dung bài hát và hiệu ứng chữ chạy */
+/* Chữ chạy tên bài hát */
 .track-text-container {
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
   background: rgba(0, 0, 0, 0.4);
   margin-bottom: 10px;
-  border: 1px solid var(--primary-dim);
 }
 
 .scrolling-text {
   display: inline-block;
   padding-left: 100%;
   animation: scroll-left 15s linear infinite;
-  color: var(--neon-green);
-  font-size: 0.85rem;
 }
 
-@keyframes scroll-left {
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
-/* Thanh tiến trình (Progress Bar) */
+/* Thanh Progress & Thời gian */
 .progress-container {
   width: 100%;
   height: 4px;
   background: rgba(255, 255, 255, 0.1);
-  margin: 12px 0;
+  margin: 12px 0 5px 0;
   cursor: pointer;
-  border-radius: 2px;
 }
 
 .progress-bar {
@@ -440,14 +422,19 @@ nav {
   background: var(--neon-green);
   box-shadow: var(--neon-glow);
   width: 0%;
-  transition: width 0.1s linear;
 }
 
-/* Hệ thống nút bấm */
+.time-display {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  opacity: 0.8;
+}
+
 .music-player .buttons {
   display: flex;
   gap: 5px;
-  margin-bottom: 10px;
+  margin: 10px 0;
 }
 
 .music-player button {
@@ -457,62 +444,61 @@ nav {
   color: var(--neon-green);
   padding: 8px;
   cursor: pointer;
-  transition: 0.2s;
-  font-family: 'Fira Code', monospace;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.music-player button:hover {
-  background: var(--primary-dim);
-  box-shadow: var(--neon-glow);
+/* Playlist thả xuống */
+.playlist {
+  list-style: none;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-out;
+}
+
+.playlist.show {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 10px;
+  border-top: 1px dashed var(--primary-dim);
+}
+
+/* =========================================
+   7. HIỆU ỨNG TEXT & ANIMATIONS
+   ========================================= */
+.highlight {
   color: #fff;
+  text-shadow: var(--neon-glow);
 }
 
-/* Media Query cho di động */
+.cursor {
+  color: var(--neon-green);
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+.blink {
+  animation: blink-anim 1s infinite;
+}
+
+@keyframes blink-anim {
+  50% { opacity: 0; }
+}
+
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+/* =========================================
+   8. RESPONSIVE (DI ĐỘNG)
+   ========================================= */
 @media (max-width: 480px) {
   .music-player {
     width: 200px;
     right: 10px;
     top: 70px;
   }
-
-  .music-player.minimized {
-    width: 130px;
-  }
-}
-
-.playlist {
-  list-style: none;
-  max-height: 0;
-  /* Mặc định ẩn */
-  overflow: hidden;
-  transition: max-height 0.4s ease-out;
-  /* Tạo hiệu ứng trượt */
-  background: rgba(0, 0, 0, 0.3);
-}
-
-.playlist.show {
-  max-height: 200px;
-  /* Độ cao tối đa khi hiện danh sách */
-  overflow-y: auto;
-  /* Hiện thanh cuộn nếu danh sách quá dài */
-  margin-top: 10px;
-  padding: 10px;
-  border-top: 1px dashed var(--primary-dim);
-}
-
-/* Thêm hiệu ứng cho các item trong playlist */
-.playlist li {
-  padding: 8px;
-  cursor: pointer;
-  font-size: 0.8rem;
-  border-bottom: 1px solid rgba(0, 255, 65, 0.1);
-  transition: 0.2s;
-}
-
-.playlist li:hover {
-  background: var(--primary-dim);
-  color: #fff;
+  
+  .nav-menu { gap: 10px; }
+  
+  .nav-menu a { font-size: 0.75rem; }
 }

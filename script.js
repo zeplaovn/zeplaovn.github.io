@@ -2,78 +2,22 @@
  * ZEPLAO.VN - Cyber Portfolio Logic
  */
 
-// --- 1. Hiệu ứng Typewriter (Đánh máy) ---
+// =========================================
+// 1. KHAI BÁO BIẾN TOÀN CỤC
+// =========================================
+
+// --- Typewriter ---
 const message = "Cyber Security Enthusiast | CTF Player | Researcher";
 let typeIndex = 0;
 
-function typewriter() {
-    const typewriterElement = document.getElementById("typewriter");
-    if (typewriterElement && typeIndex < message.length) {
-        typewriterElement.innerHTML += message.charAt(typeIndex);
-        typeIndex++;
-        setTimeout(typewriter, 60); // Tốc độ 60ms
-    }
-}
-
-// --- 2. Hiệu ứng Matrix Rain ---
+// --- Matrix Rain ---
 const canvas = document.getElementById('matrixCanvas');
 const ctx = canvas.getContext('2d');
 let columns, drops;
 const letters = "0101010101010101ABCDEFHIJKLMNOPQRSTUVWXYZ";
 const fontSize = 16;
 
-function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    columns = Math.floor(canvas.width / fontSize);
-    drops = Array(columns).fill(1);
-}
-
-function drawMatrix() {
-    ctx.fillStyle = "rgba(0, 8, 0, 0.15)"; // Tạo hiệu ứng đuôi mờ
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    ctx.fillStyle = "#00ff41"; // Màu neon đặc trưng
-    ctx.font = fontSize + "px monospace";
-    
-    for (let i = 0; i < drops.length; i++) {
-        const text = letters.charAt(Math.floor(Math.random() * letters.length));
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-        
-        // Reset drop khi chạm đáy hoặc ngẫu nhiên sau khi chạm đáy
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-            drops[i] = 0;
-        }
-        drops[i]++;
-    }
-}
-
-// --- 3. Accordion Kỹ năng (Skills) ---
-function toggleSkill(header) {
-    const item = header.parentElement;
-    const content = header.nextElementSibling;
-    const icon = header.querySelector('.icon');
-    
-    const isOpen = item.classList.contains('active');
-    
-    // Đóng tất cả các mục khác (nếu muốn hiệu ứng chỉ mở 1 mục duy nhất)
-    document.querySelectorAll('.skill-item').forEach(el => {
-        el.classList.remove('active');
-        el.querySelector('.skill-content').style.maxHeight = null;
-        el.querySelector('.icon').innerText = '▼';
-    });
-
-    if (!isOpen) {
-        item.classList.add('active');
-        content.style.maxHeight = content.scrollHeight + "px";
-        icon.innerText = '▲';
-        header.setAttribute('aria-expanded', 'true');
-    } else {
-        header.setAttribute('aria-expanded', 'false');
-    }
-}
-
-// --- 4. Music Player Logic ---
+// --- Music Player Data ---
 const music = document.getElementById("bgMusic");
 const playBtn = document.getElementById("playBtn");
 const statusText = document.getElementById("status");
@@ -103,123 +47,95 @@ const tracks = [
 ];
 let currentTrackIndex = 0;
 
-function loadTrack(index) {
-    currentTrackIndex = index;
-    // Đảm bảo đường dẫn assets/ khớp với cấu trúc thư mục của bạn
-    music.src = `assets/${tracks[index].file}`;
-    trackName.innerText = tracks[index].name;
+// =========================================
+// 2. KHỞI TẠO & LẮNG NGHE SỰ KIỆN (EVENTS)
+// =========================================
+
+window.addEventListener('resize', resize);
+
+window.addEventListener('load', () => {
+    // Khởi tạo Matrix
+    resize();
+    setInterval(drawMatrix, 50);
     
-    // Reset animation scrolling text
-    trackName.style.animation = 'none';
-    trackName.offsetHeight; 
-    trackName.style.animation = null;
-
-    // Cập nhật giao diện playlist
-    updatePlaylistUI();
-}
-
-function updatePlaylistUI() {
-    const items = playlistElement.querySelectorAll("li");
-    items.forEach((li, i) => {
-        if (i === currentTrackIndex) {
-            li.classList.add("active-track");
-            li.style.color = "var(--neon-green)";
-        } else {
-            li.classList.remove("active-track");
-            li.style.color = "#fff";
-        }
-    });
-}
-// Thêm hàm này vào script.js
-function togglePlaylist() {
-    const playlist = document.getElementById('playlist');
-    playlist.classList.toggle('show');
+    // Khởi tạo Typewriter sau 1s
+    setTimeout(typewriter, 1000); 
     
-    // Đổi text nút khi nhấn (tùy chọn)
-    const toggleBtn = document.querySelector('.toggle-list');
-    if (playlist.classList.contains('show')) {
-        toggleBtn.innerText = "> HIDE_PLAYLIST";
-    } else {
-        toggleBtn.innerText = "> VIEW_PLAYLIST";
-    }
-}
-function updateUI(isPlaying) {
-    if (isPlaying) {
-        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-        statusText.innerText = "SYSTEM ONLINE";
-        statusText.classList.remove("blink"); // Ngừng nháy khi đang chạy
-        statusText.style.color = "var(--neon-green)";
-    } else {
-        playBtn.innerHTML = '<i class="fas fa-play"></i>';
-        statusText.innerText = "SYSTEM OFFLINE";
-        statusText.classList.add("blink");
-        statusText.style.color = "#ff4141"; // Đỏ khi offline
-    }
-}
+    // Khởi tạo Music Player
+    initPlaylist();
+    loadTrack(0);
+});
 
-function toggleMusic() {
-    if (music.paused) {
-        music.play().then(() => updateUI(true)).catch(err => console.log("User interaction required"));
-    } else {
-        music.pause();
-        updateUI(false);
-    }
-}
-
-function togglePlaylist() {
-    const playlist = document.getElementById('playlist');
-    playlist.classList.toggle('show');
-    
-    // Đổi text nút khi nhấn (tùy chọn)
-    const toggleBtn = document.querySelector('.toggle-list');
-    if (playlist.classList.contains('show')) {
-        toggleBtn.innerText = "> HIDE_PLAYLIST";
-    } else {
-        toggleBtn.innerText = "> VIEW_PLAYLIST";
-    }
-}
-
-
-// Thêm hàm này vào script.js
-function togglePlaylist() {
-    const playlist = document.getElementById('playlist');
-    playlist.classList.toggle('show');
-    
-    // Đổi text nút khi nhấn (tùy chọn)
-    const toggleBtn = document.querySelector('.toggle-list');
-    if (playlist.classList.contains('show')) {
-        toggleBtn.innerText = "> HIDE_PLAYLIST";
-    } else {
-        toggleBtn.innerText = "> VIEW_PLAYLIST";
-    }
-}
-function nextTrack() {
-    currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
-    loadTrack(currentTrackIndex);
-    music.play().then(() => updateUI(true));
-}
-
-function prevTrack() {
-    currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
-    loadTrack(currentTrackIndex);
-    music.play().then(() => updateUI(true));
-}
-
-function setProgress(e) {
-    const container = document.querySelector('.progress-container');
-    const width = container.clientWidth;
-    const clickX = e.offsetX;
+// Cập nhật tiến trình nhạc (Progress Bar & Time)
+music.ontimeupdate = () => {
     if (music.duration) {
-        music.currentTime = (clickX / width) * music.duration;
+        const progressPercent = (music.currentTime / music.duration) * 100;
+        progressBar.style.width = progressPercent + "%";
+        
+        document.getElementById("currentTime").innerText = formatTime(music.currentTime);
+        document.getElementById("durationTime").innerText = formatTime(music.duration);
+    }
+};
+
+// Tự động chuyển bài khi kết thúc
+music.onended = nextTrack;
+
+// =========================================
+// 3. CÁC HÀM HIỆU ỨNG (VISUALS)
+// =========================================
+
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    columns = Math.floor(canvas.width / fontSize);
+    drops = Array(columns).fill(1);
+}
+
+function drawMatrix() {
+    ctx.fillStyle = "rgba(0, 8, 0, 0.15)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#00ff41";
+    ctx.font = fontSize + "px monospace";
+    for (let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
     }
 }
 
-function togglePlayer() {
-    const player = document.getElementById('mainPlayer');
-    const minBtn = document.querySelector('.minimize-btn');
-    player.classList.toggle('minimized');
-    minBtn.innerText = player.classList.contains('minimized') ? "[ + ]" : "[ _ ]";
+function typewriter() {
+    const el = document.getElementById("typewriter");
+    if (el && typeIndex < message.length) {
+        el.innerHTML += message.charAt(typeIndex);
+        typeIndex++;
+        setTimeout(typewriter, 60);
+    }
 }
+
+function toggleSkill(header) {
+    const item = header.parentElement;
+    const content = header.nextElementSibling;
+    const icon = header.querySelector('.icon');
+    const isOpen = item.classList.contains('active');
+    
+    // Đóng các mục khác (Accordion mode)
+    document.querySelectorAll('.skill-item').forEach(el => {
+        el.classList.remove('active');
+        el.querySelector('.skill-content').style.maxHeight = null;
+        el.querySelector('.icon').innerText = '▼';
+    });
+
+    if (!isOpen) {
+        item.classList.add('active');
+        content.style.maxHeight = content.scrollHeight + "px";
+        icon.innerText = '▲';
+    }
+}
+
+// =========================================
+// 4. LOGIC TRÌNH PHÁT NHẠC (MUSIC PLAYER)
+// =========================================
 
 function initPlaylist() {
     playlistElement.innerHTML = "";
@@ -234,31 +150,88 @@ function initPlaylist() {
     });
 }
 
-// --- 5. Event Listeners & Initialization ---
+function loadTrack(index) {
+    currentTrackIndex = index;
+    music.src = `assets/${tracks[index].file}`;
+    if (trackName) trackName.innerText = tracks[index].name;
+    
+    // Reset thời gian và animation
+    document.getElementById("currentTime").innerText = "00:00";
+    document.getElementById("durationTime").innerText = "00:00";
+    
+    // Reset hiệu ứng chữ chạy
+    trackName.style.animation = 'none';
+    trackName.offsetHeight; 
+    trackName.style.animation = null;
 
-// Theo dõi tiến trình bài hát
-music.ontimeupdate = () => {
-    if (music.duration) {
-        const progressPercent = (music.currentTime / music.duration) * 100;
-        progressBar.style.width = progressPercent + "%";
+    updatePlaylistUI();
+}
+
+function updatePlaylistUI() {
+    const items = playlistElement.querySelectorAll("li");
+    items.forEach((li, i) => {
+        li.classList.toggle("active-track", i === currentTrackIndex);
+        li.style.color = (i === currentTrackIndex) ? "var(--neon-green)" : "#fff";
+    });
+}
+
+function updateUI(isPlaying) {
+    if (isPlaying) {
+        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        statusText.innerText = "SYSTEM ONLINE";
+        statusText.classList.remove("blink");
+        statusText.style.color = "var(--neon-green)";
+    } else {
+        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+        statusText.innerText = "SYSTEM OFFLINE";
+        statusText.classList.add("blink");
+        statusText.style.color = "#ff4141";
     }
-};
+}
 
-// Tự động chuyển bài
-music.onended = nextTrack;
+function toggleMusic() {
+    if (music.paused) {
+        music.play().then(() => updateUI(true)).catch(e => console.log("Click required"));
+    } else {
+        music.pause();
+        updateUI(false);
+    }
+}
 
-// Khởi chạy khi Window load
-window.addEventListener('resize', resize);
+function nextTrack() {
+    currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+    loadTrack(currentTrackIndex);
+    music.play().then(() => updateUI(true));
+}
 
-window.addEventListener('load', () => {
-    // 1. Matrix
-    resize();
-    setInterval(drawMatrix, 50);
-    
-    // 2. Typewriter
-    setTimeout(typewriter, 1000); // Đợi 1s sau khi load rồi mới đánh máy
-    
-    // 3. Music Player
-    initPlaylist();
-    loadTrack(0);
-});
+function prevTrack() {
+    currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+    loadTrack(currentTrackIndex);
+    music.play().then(() => updateUI(true));
+}
+
+function setProgress(e) {
+    const width = document.querySelector('.progress-container').clientWidth;
+    const clickX = e.offsetX;
+    if (music.duration) music.currentTime = (clickX / width) * music.duration;
+}
+
+function togglePlayer() {
+    const player = document.getElementById('mainPlayer');
+    const minBtn = document.querySelector('.minimize-btn');
+    player.classList.toggle('minimized');
+    minBtn.innerText = player.classList.contains('minimized') ? "[ + ]" : "[ _ ]";
+}
+
+function togglePlaylist() {
+    const playlist = document.getElementById('playlist');
+    const toggleBtn = document.querySelector('.toggle-list');
+    playlist.classList.toggle('show');
+    toggleBtn.innerText = playlist.classList.contains('show') ? "> HIDE_PLAYLIST" : "> VIEW_PLAYLIST";
+}
+
+function formatTime(seconds) {
+    const min = Math.floor(seconds / 60);
+    const sec = Math.floor(seconds % 60);
+    return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+}
