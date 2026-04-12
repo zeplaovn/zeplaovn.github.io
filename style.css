@@ -21,6 +21,18 @@ a {
     color: var(--neon-green);
 }
 
+.table-container {
+    width: 100%;
+    overflow-x: auto; /* Cho phép cuộn ngang nếu bảng quá rộng */
+    border: 1px solid var(--primary-dim); /* Giữ style đồng bộ */
+    margin-top: 15px;
+}
+
+table {
+    width: 100%;
+    min-width: 500px; /* Ép bảng không được nhỏ hơn mức này để tránh nát chữ */
+    border-collapse: collapse;
+}
 
 /* Nền Matrix */
 #matrixCanvas {
