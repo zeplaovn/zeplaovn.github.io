@@ -4,10 +4,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>zeplaovn | Cybersecurity Portfolio</title>
+  <title>zeplaovn | Chuyên gia Bảo mật & CTF Player Portfolio</title>
+  <meta name="description"
+    content="Portfolio của zeplaovn - Security Researcher chuyên về Web Exploitation, Pwn và Reverse Engineering. Xem thành tích CTF và các dự án bảo mật.">
+  <meta name="keywords" content="zeplaovn, cybersecurity, ctf player, security researcher, web exploit, pwn">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500&display=swap" rel="stylesheet">
-  <meta name="description" content="Portfolio của zeplaovn - Security Researcher & CTF Player">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
@@ -26,12 +31,38 @@
     </nav>
   </header>
 
-  <div class="music-player">
-    <div id="status">OFFLINE</div>
-    <button id="playBtn" onclick="toggleMusic()">[ PLAY AUDIO ]</button>
-    <audio id="bgMusic" loop>
-      <source src="Lost-Jay Hardway.mp3" type="audio/mpeg">
-    </audio>
+
+  <div class="music-player glass-card neon-border" id="mainPlayer">
+    <div class="player-controls">
+      <div class="player-header">
+        <div id="status" class="blink">SYSTEM OFFLINE</div>
+        <button class="minimize-btn" onclick="togglePlayer()">[ _ ]</button>
+      </div>
+
+      <div class="player-body" id="playerBody">
+        <div class="track-info">
+          <div class="track-text-container">
+            <div id="trackName" class="scrolling-text">No track selected...</div>
+          </div>
+        </div>
+
+        <div class="progress-container" onclick="setProgress(event)">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="buttons">
+          <button onclick="prevTrack()"><i class="fas fa-backward"></i></button>
+          <button id="playBtn" onclick="toggleMusic()"><i class="fas fa-play"></i></button>
+          <button onclick="nextTrack()"><i class="fas fa-forward"></i></button>
+        </div>
+
+        <button class="toggle-list" onclick="togglePlaylist()">
+          > VIEW_PLAYLIST
+        </button>
+        <ul class="playlist" id="playlist"></ul>
+      </div>
+    </div>
+    <audio id="bgMusic"></audio>
   </div>
 
   <div class="page-wrapper">
@@ -40,92 +71,116 @@
         <div class="terminal-text">
           <h1>> System.init(<span class="highlight">"zeplaovn"</span>);</h1>
           <p id="typewriter"></p>
-          <div class="cursor"></div>
+          <span class="cursor blink">_</span>
         </div>
       </section>
 
-      <section id="about" class="glass-card neon-border">
-        <h2>## 01. Giới thiệu</h2>
-        <p>Chào mọi người, mình là một chuyên gia bảo mật đầy nhiệt huyết. Chuyên sâu vào <strong>Web
-            Exploitation</strong>, <strong>Pwn</strong> và <strong>Reverse Engineering</strong>. Sứ mệnh của
-          mình là tìm ra lỗ hổng trước khi kẻ xấu làm điều đó.</p>
-      </section>
+<section id="about" class="glass-card neon-border">
+    <h2>## 01. System Information</h2>
+    <div class="terminal-content">
+        <div class="terminal-header">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+            <span class="terminal-title">zeplaovn@portfolio: ~</span>
+        </div>
+        
+        <div class="terminal-body">
+            <p><span class="highlight">root@zeplao:~#</span> whoami</p>
+            <p>
+                Greetings. I am <span class="highlight">zeplaovn</span>. 
+                A dedicated Security Researcher and CTF enthusiast driven by the thrill of deconstructing complex systems to uncover hidden vulnerabilities. 
+                I don't just find bugs; I decode the logic behind them to build more resilient environments.
+            </p>
+
+            <p style="margin-top: 15px;"><span class="highlight">root@zeplao:~#</span> cat bio.txt</p>
+            <p>
+                Leveraging a strong foundation from global CTF competitions, I specialize in:
+            </p>
+            <ul style="list-style: none; padding-left: 15px; margin: 10px 0;">
+                <li><span class="highlight">[✔]</span> <b>Web Exploitation:</b> Vulnerability research and bypassing modern application security controls.</li>
+                <li><span class="highlight">[✔]</span> <b>Binary Analysis:</b> Reverse engineering and memory corruption exploitation (Pwn).</li>
+                <li><span class="highlight">[✔]</span> <b>Red Teaming:</b> Simulating real-world attack vectors to assess and harden enterprise infrastructures.</li>
+            </ul>
+
+            <div class="mission-statement" style="margin-top: 15px; border-top: 1px dashed var(--primary-dim); padding-top: 10px;">
+                <p><span class="highlight">> Philosophy:</span> "Cybersecurity is not a destination; it's a continuous process of rigorous auditing."</p>
+                <p><span class="highlight">> Status:</span> <span class="blink">Actively seeking new security challenges.</span></p>
+            </div>
+        </div>
+    </div>
+</section>
 
       <section id="skills" class="glass-card neon-border">
         <h2>## 02. Kỹ năng & Công cụ</h2>
         <div class="skill-accordion">
 
-          <div class="skill-item">
-            <div class="skill-header" onclick="toggleSkill(this)">
+          <article class="skill-item">
+            <div class="skill-header" onclick="toggleSkill(this)" role="button" aria-expanded="false">
               <span>[+] Web Exploitation</span>
               <span class="icon">▼</span>
             </div>
             <div class="skill-content">
               <p><strong>Công cụ:</strong>
                 <span class="tool">Burp Suite Pro</span>, <span class="tool">SQLMap</span>,
-                <span class="tool">Ffuf</span>, <span class="tool">OWASP ZAP</span>, <span class="tool">Caido</span>
+                <span class="tool">Ffuf</span>, <span class="tool">OWASP ZAP</span>,
+                <span class="tool">Caido</span>
               </p>
-              <p><strong>Kỹ thuật:</strong> Khai thác các lỗ hổng trọng yếu như <b>SQL Injection</b>,
-                <b>XSS</b>, <b>SSRF</b>, <b>IDOR</b> và <b>Insecure Deserialization</b>. Phân tích logic
-                nghiệp vụ (Business Logic) và phá vỡ cơ chế xác thực OAuth/JWT.
-              </p>
+              <p><strong>Kỹ thuật:</strong> Khai thác <b>SQL Injection</b>, <b>XSS</b>, <b>SSRF</b>, <b>IDOR</b> và
+                <b>Insecure Deserialization</b>. Phá vỡ cơ chế xác thực OAuth/JWT.</p>
             </div>
-          </div>
+          </article>
 
-          <div class="skill-item">
-            <div class="skill-header" onclick="toggleSkill(this)">
+          <article class="skill-item">
+            <div class="skill-header" onclick="toggleSkill(this)" role="button" aria-expanded="false">
               <span>[+] Reverse Engineering & Pwn</span>
               <span class="icon">▼</span>
             </div>
             <div class="skill-content">
               <p><strong>Công cụ:</strong>
                 <span class="tool">GDB (Gef/Pwndbg)</span>, <span class="tool">Ghidra</span>,
-                <span class="tool">IDA Pro</span>, <span class="tool">Pwntools</span>, <span class="tool">Z3
-                  Solver</span>
+                <span class="tool">IDA Pro</span>, <span class="tool">Pwntools</span>,
+                <span class="tool">Z3 Solver</span>
               </p>
-              <p><strong>Kỹ thuật:</strong> Phân tích mã máy (Assembly x86/ARM), dịch ngược mã nguồn. Khai
-                thác lỗi quản lý bộ nhớ như <b>Buffer Overflow</b>, <b>Heap Grooming</b>,
-                <b>Use-After-Free</b> và xây dựng <b>ROP Chains</b> để bypass ASLR/DEP.
-              </p>
+              <p><strong>Kỹ thuật:</strong> Phân tích Assembly (x86/ARM). Khai thác <b>Buffer Overflow</b>, <b>Heap
+                  Grooming</b>, <b>Use-After-Free</b> và xây dựng <b>ROP Chains</b>.</p>
             </div>
-          </div>
+          </article>
 
-          <div class="skill-item">
-            <div class="skill-header" onclick="toggleSkill(this)">
+          <article class="skill-item">
+            <div class="skill-header" onclick="toggleSkill(this)" role="button" aria-expanded="false">
               <span>[+] Digital Forensics & Stego</span>
               <span class="icon">▼</span>
             </div>
             <div class="skill-content">
               <p><strong>Công cụ:</strong>
                 <span class="tool">Wireshark</span>, <span class="tool">Volatility 3</span>,
-                <span class="tool">Autopsy</span>, <span class="tool">Stegsolve</span>, <span
-                  class="tool">Aperi'Solve</span>
+                <span class="tool">Autopsy</span>, <span class="tool">Stegsolve</span>,
+                <span class="tool">Aperi'Solve</span>
               </p>
-              <p><strong>Kỹ thuật:</strong> Điều tra dấu vết trong bộ nhớ RAM, phân tích traffic mạng
-                (PCAP), khôi phục dữ liệu từ Disk Image và tìm kiếm thông tin ẩn trong các tệp tin đa
-                phương tiện (LSB, Metadata).</p>
+              <p><strong>Kỹ thuật:</strong> Điều tra bộ nhớ RAM, phân tích traffic mạng (PCAP), khôi phục dữ liệu từ
+                Disk Image và kỹ thuật giấu tin (LSB, Metadata).</p>
             </div>
-          </div>
+          </article>
 
-          <div class="skill-item">
-            <div class="skill-header" onclick="toggleSkill(this)">
+          <article class="skill-item">
+            <div class="skill-header" onclick="toggleSkill(this)" role="button" aria-expanded="false">
               <span>[+] Network & Active Directory</span>
               <span class="icon">▼</span>
             </div>
             <div class="skill-content">
               <p><strong>Công cụ:</strong>
                 <span class="tool">Nmap</span>, <span class="tool">BloodHound</span>,
-                <span class="tool">Impacket</span>, <span class="tool">Mimikatz</span>, <span
-                  class="tool">Responder</span>
+                <span class="tool">Impacket</span>, <span class="tool">Mimikatz</span>,
+                <span class="tool">Responder</span>
               </p>
-              <p><strong>Kỹ thuật:</strong> Rà quét dịch vụ mạng, tấn công giao thức xác thực
-                (Kerberoasting, AS-REP Roasting), leo thang đặc quyền trong môi trường Windows Domain và
-                khai thác lỗ hổng cấu hình sai (Misconfiguration).</p>
+              <p><strong>Kỹ thuật:</strong> Kerberoasting, AS-REP Roasting, leo thang đặc quyền Windows Domain và khai
+                thác Misconfiguration.</p>
             </div>
-          </div>
+          </article>
 
-          <div class="skill-item">
-            <div class="skill-header" onclick="toggleSkill(this)">
+          <article class="skill-item">
+            <div class="skill-header" onclick="toggleSkill(this)" role="button" aria-expanded="false">
               <span>[+] Infrastructure & Scripting</span>
               <span class="icon">▼</span>
             </div>
@@ -134,11 +189,10 @@
                 <span class="tool">Linux (Kali/Parrot)</span>, <span class="tool">Docker</span>,
                 <span class="tool">Python</span>, <span class="tool">Bash Scripting</span>
               </p>
-              <p><strong>Kỹ thuật:</strong> Xây dựng hạ tầng Lab bảo mật, tự động hóa quy trình
-                Pentest/CTF bằng Python, quản trị hệ thống Linux Hardening và triển khai các container
-                để giả lập môi trường tấn công.</p>
+              <p><strong>Kỹ thuật:</strong> Xây dựng Security Lab, tự động hóa quy trình Pentest/CTF, Linux Hardening và
+                triển khai kiến trúc Container.</p>
             </div>
-          </div>
+          </article>
 
         </div>
       </section>
@@ -160,7 +214,7 @@
       <section id="ctf" class="glass-card neon-border">
         <h2>## 04. Thành tích CTF</h2>
         <div class="table-container">
-          <table >
+          <table>
             <thead>
               <tr>
                 <th>Giải đấu</th>
@@ -181,7 +235,8 @@
                 <td>Root Me</td>
                 <td class="highlight">18000</td>
                 <td>First Blood: Web researcher</td>
-                <td class="profile-link"><a href="https://www.root-me.org/zeplaovn?lang=en">Root-Me</a></td>
+                <td class="profile-link"><a href="https://www.root-me.org/zeplaovn?lang=en">Root-Me</a>
+                </td>
 
               </tr>
               <tr>
