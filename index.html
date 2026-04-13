@@ -28,60 +28,75 @@
 
   <header id="navbar">
     <nav class="main-content">
-      <div class="logo" aria-label="zeplaovn logo">ZEPLAO<span>VN</span></div>
-      <ul class="nav-menu">
-        <li><a href="#about"><i class="fas fa-user-secret"></i> About</a></li>
-        <li><a href="#skills"><i class="fas fa-code"></i> Skills</a></li>
-        <li><a href="#profiles"><i class="fas fa-terminal"></i> Profiles</a></li>
-        <li><a href="#ctf"><i class="fas fa-trophy"></i> CTF</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <aside class="music-player glass-card neon-border" id="mainPlayer" aria-label="Music Player">
-    <div class="player-controls">
-      <div class="player-header">
-        <div id="status" class="blink">SYSTEM OFFLINE</div>
-        <button class="minimize-btn" onclick="togglePlayer()" title="Minimize Player">[ _ ]</button>
-      </div>
-
-      <div class="player-body" id="playerBody">
-        <div class="track-info">
-          <div class="track-text-container">
-            <div id="trackName" class="scrolling-text">Waiting for system init...</div>
-          </div>
+        <div class="logo" aria-label="zeplaovn logo">ZEPLAO<span>VN</span></div>
+        
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
         </div>
 
-        <div class="progress-container" onclick="setProgress(event)">
-          <div class="progress-bar" id="progressBar"></div>
+        <ul class="nav-menu">
+            <li><a href="#about"><i class="fas fa-user-secret"></i> <span>About</span></a></li>
+            <li><a href="#skills"><i class="fas fa-code"></i> <span>Skills</span></a></li>
+            <li><a href="#profiles"><i class="fas fa-terminal"></i> <span>Profiles</span></a></li>
+            <li><a href="#ctf"><i class="fas fa-trophy"></i> <span>CTF</span></a></li>
+        </ul>
+    </nav>
+</header>
+
+<aside class="music-player" id="mainPlayer" aria-label="Music Player">
+    <div class="player-header">
+        <div id="status" class="blink">SYSTEM OFFLINE</div>
+        <button class="minimize-btn" onclick="togglePlayer()" title="Toggle Player">
+            <i class="fas fa-minus" id="toggleIcon"></i>
+        </button>
+    </div>
+
+    <div class="player-body" id="playerBody">
+        <div class="track-info">
+            <div class="track-text-container">
+                <div id="trackName" class="scrolling-text">Waiting for system init...</div>
+            </div>
+        </div>
+
+        <div class="progress-container" id="progressContainer" onclick="setProgress(event)">
+            <div class="progress-bar" id="progressBar"></div>
         </div>
 
         <div class="time-display">
-          <span id="currentTime">00:00</span>
-          <span id="durationTime">00:00</span>
+            <span id="currentTime">00:00</span>
+            <span id="durationTime">00:00</span>
         </div>
 
         <div class="buttons">
-          <button onclick="prevTrack()" aria-label="Previous Track"><i class="fas fa-backward"></i></button>
-          <button id="playBtn" onclick="toggleMusic()" aria-label="Play/Pause"><i class="fas fa-play"></i></button>
-          <button onclick="nextTrack()" aria-label="Next Track"><i class="fas fa-forward"></i></button>
+            <button onclick="prevTrack()" aria-label="Previous Track">
+                <i class="fas fa-backward"></i>
+            </button>
+            <button id="playBtn" onclick="toggleMusic()" aria-label="Play/Pause">
+                <i class="fas fa-play"></i>
+            </button>
+            <button onclick="nextTrack()" aria-label="Next Track">
+                <i class="fas fa-forward"></i>
+            </button>
         </div>
 
         <button class="toggle-list" onclick="togglePlaylist()">
-          <i class="fas fa-list"></i> VIEW_PLAYLIST
+            <i class="fas fa-list"></i> <span id="toggleText">VIEW_PLAYLIST</span>
         </button>
+        
         <ul class="playlist" id="playlist"></ul>
-      </div>
     </div>
+
     <audio id="bgMusic"></audio>
-  </aside>
+</aside>
 
   <main class="page-wrapper">
     <div class="main-content">
 
       <section id="hero">
         <div class="terminal-text">
-          <h1>> System.init(<span class="highlight">"zeplaovn"</span>);</h1>
+          <h1 class="highlight">> System.init("<span class="blink" >zeplaovn</span>");</h1>
           <p id="typewriter" style="display: inline;"></p>
           <span class="cursor blink">_</span>
         </div>
@@ -131,18 +146,22 @@
 
           <article class="skill-item">
             <div class="skill-header" onclick="toggleSkill(this)" role="button">
-              <span>[+] Web Exploitation & Cloud Security</span>
+              <span>[+] Web Exploitation & API Security</span>
               <span class="icon">▼</span>
             </div>
             <div class="skill-content">
               <p><strong>Công cụ :</strong>
-                <span class="tool">Burp Suite Professional</span>, <span class="tool">Caido</span>, <span
-                  class="tool">Ffuf</span>, <span class="tool">SQLMap</span>, <span class="tool">Arjun</span>
+                <span class="tool">Burp Suite</span>, <span class="tool">OWASP ZAP</span>, <span
+                  class="tool">Caido</span>,
+                <span class="tool">Ffuf</span>, <span class="tool">SQLMap</span>, <span class="tool">Nuclei</span>
               </p>
-              <p><strong>Chuyên môn:</strong>
-                Nghiên cứu sâu về các lỗ hổng logic phức tạp, phá vỡ cơ chế <b>OAuth2/SAML</b>, khai thác <b>SSRF</b>
-                trong môi trường Cloud (AWS/GCP), và các kỹ thuật <b>Insecure Deserialization</b> trên Java/PHP. Có khả
-                năng bypass các lớp bảo vệ WAF và kiểm thử bảo vệ API (REST/GraphQL).
+              <p><strong>Cách hoạt động:</strong>
+                Đây là bộ công cụ "core" của mọi CTF player và pentester. Burp/ZAP dùng để intercept và chỉnh sửa
+                request,
+                fuzzing input để tìm bug logic. Ffuf và Nuclei giúp automation scan nhanh các endpoint, còn SQLMap hỗ
+                trợ
+                khai thác SQL Injection ở mức sâu. Được chọn vì khả năng kết hợp manual + automation cực mạnh khi đánh
+                web.
               </p>
             </div>
           </article>
@@ -155,30 +174,89 @@
             <div class="skill-content">
               <p><strong>Công cụ :</strong>
                 <span class="tool">IDA Pro</span>, <span class="tool">Ghidra</span>, <span class="tool">Binary
-                  Ninja</span>, <span class="tool">GDB (Pwndbg/Gef)</span>, <span class="tool">Pwntools</span>
+                  Ninja</span>,
+                <span class="tool">GDB (Pwndbg/Gef)</span>, <span class="tool">Pwntools</span>, <span
+                  class="tool">Radare2</span>
               </p>
-              <p><strong>Chuyên môn:</strong>
-                Phân tích mã độc và dịch ngược file thực thi (x86/64, ARM). Thành thạo kỹ thuật khai thác bộ nhớ như
-                <b>Stack/Heap Overflow</b>, <b>Format String</b>, xây dựng <b>ROP Chains</b> phức tạp để bypass các cơ
-                chế bảo mật hiện đại như <b>ASLR, NX, và Canary</b>.
+              <p><strong>Cách hoạt động:</strong>
+                IDA/Ghidra giúp đọc và hiểu assembly nhanh chóng. GDB + Pwndbg dùng để debug runtime,
+                còn Pwntools giúp script hóa exploit. Radare2 được ưa chuộng trong CTF vì nhẹ và linh hoạt.
+                Những tool này được chọn vì hỗ trợ full workflow từ phân tích đến exploit binary.
               </p>
             </div>
           </article>
 
           <article class="skill-item">
             <div class="skill-header" onclick="toggleSkill(this)" role="button">
-              <span>[+] Digital Forensics & Incident Response</span>
+              <span>[+] Cryptography & Encoding</span>
               <span class="icon">▼</span>
             </div>
             <div class="skill-content">
               <p><strong>Công cụ :</strong>
-                <span class="tool">Volatility 3</span>, <span class="tool">Wireshark</span>, <span
-                  class="tool">Autopsy</span>, <span class="tool">FTK Imager</span>
+                <span class="tool">CyberChef</span>, <span class="tool">RsaCtfTool</span>, <span
+                  class="tool">Hashcat</span>,
+                <span class="tool">John the Ripper</span>
               </p>
-              <p><strong>Chuyên môn:</strong>
-                Điều tra và phân tích dấu vết số. Trích xuất thông tin từ <b>Memory Dump</b>, phân tích traffic mạng mức
-                thấp (L7 Protocol Analysis) để phát hiện hành vi xâm nhập, và khôi phục dữ liệu từ các hệ thống tệp tin
-                bị hỏng hoặc bị xóa có chủ đích.
+              <p><strong>Cách hoạt động:</strong>
+                CyberChef giúp xử lý nhanh encode/decode trong CTF. Hashcat và John dùng brute-force hash cực nhanh
+                bằng GPU. RsaCtfTool chuyên xử lý các lỗi RSA phổ biến. Đây là các tool không thể thiếu trong challenge
+                crypto.
+              </p>
+            </div>
+          </article>
+
+          <article class="skill-item">
+            <div class="skill-header" onclick="toggleSkill(this)" role="button">
+              <span>[+] Forensics & Network Analysis</span>
+              <span class="icon">▼</span>
+            </div>
+            <div class="skill-content">
+              <p><strong>Công cụ :</strong>
+                <span class="tool">Wireshark</span>, <span class="tool">Volatility 3</span>, <span
+                  class="tool">Autopsy</span>,
+                <span class="tool">Binwalk</span>, <span class="tool">Foremost</span>
+              </p>
+              <p><strong>Cách hoạt động:</strong>
+                Wireshark để phân tích packet capture (PCAP). Volatility xử lý memory dump,
+                Binwalk và Foremost giúp extract dữ liệu ẩn trong file. Những tool này mạnh trong việc tìm artifact
+                và reconstruct lại dữ liệu bị ẩn hoặc bị xóa.
+              </p>
+            </div>
+          </article>
+
+          <article class="skill-item">
+            <div class="skill-header" onclick="toggleSkill(this)" role="button">
+              <span>[+] OSINT & Reconnaissance</span>
+              <span class="icon">▼</span>
+            </div>
+            <div class="skill-content">
+              <p><strong>Công cụ :</strong>
+                <span class="tool">Amass</span>, <span class="tool">Subfinder</span>, <span
+                  class="tool">theHarvester</span>,
+                <span class="tool">Maltego</span>
+              </p>
+              <p><strong>Cách hoạt động:</strong>
+                Dùng để thu thập thông tin mục tiêu trước khi khai thác. Amass và Subfinder tìm subdomain,
+                Maltego visualize mối quan hệ dữ liệu. Đây là bước quan trọng giúp mở rộng attack surface.
+              </p>
+            </div>
+          </article>
+
+          <article class="skill-item">
+            <div class="skill-header" onclick="toggleSkill(this)" role="button">
+              <span>[+] Privilege Escalation & Post-Exploitation</span>
+              <span class="icon">▼</span>
+            </div>
+            <div class="skill-content">
+              <p><strong>Công cụ :</strong>
+                <span class="tool">LinPEAS</span>, <span class="tool">WinPEAS</span>, <span
+                  class="tool">Metasploit</span>,
+                <span class="tool">BloodHound</span>, <span class="tool">Mimikatz</span>
+              </p>
+              <p><strong>Cách hoạt động:</strong>
+                PEAS scripts giúp tìm privilege escalation nhanh. Mimikatz trích xuất credential,
+                BloodHound phân tích attack path trong AD. Đây là bộ tool cực kỳ phổ biến trong cả CTF lẫn pentest thực
+                tế.
               </p>
             </div>
           </article>
@@ -210,7 +288,7 @@
               <tr>
                 <th>Giải đấu / Nền tảng</th>
                 <th>Thứ hạng / Chỉ số</th>
-                <th>Ghi chú chuyên môn</th>
+                <th>Ghi chú Cach hoat dong</th>
               </tr>
             </thead>
             <tbody>

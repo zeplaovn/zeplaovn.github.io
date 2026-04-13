@@ -6,24 +6,24 @@
 // 1. KHAI BÁO BIẾN TOÀN CỤC
 // =========================================
 
-// --- Typewriter ---
-const message = "Cyber Security Enthusiast | CTF Player | Researcher";
+const message = "Cyber Security Enthusiast - CTF Player - Researcher";
 let typeIndex = 0;
 
-// --- Matrix Rain ---
+// Matrix Rain
 const canvas = document.getElementById('matrixCanvas');
 const ctx = canvas.getContext('2d');
 let columns, drops;
 const letters = "0101010101010101ABCDEFHIJKLMNOPQRSTUVWXYZ";
 const fontSize = 16;
 
-// --- Music Player Data ---
+// Music Player
 const music = document.getElementById("bgMusic");
 const playBtn = document.getElementById("playBtn");
 const statusText = document.getElementById("status");
 const progressBar = document.getElementById("progressBar");
 const trackName = document.getElementById("trackName");
 const playlistElement = document.getElementById("playlist");
+const player = document.getElementById('mainPlayer');
 
 const tracks = [
     { name: "a-y-o", file: "a-y-o.mp3" },
@@ -48,40 +48,37 @@ const tracks = [
 let currentTrackIndex = 0;
 
 // =========================================
-// 2. KHỞI TẠO & LẮNG NGHE SỰ KIỆN (EVENTS)
+// 2. KHỞI TẠO & LẮNG NGHE SỰ KIỆN
 // =========================================
 
-window.addEventListener('resize', resize);
-
 window.addEventListener('load', () => {
-    // Khởi tạo Matrix
     resize();
     setInterval(drawMatrix, 50);
-    
-    // Khởi tạo Typewriter sau 1s
     setTimeout(typewriter, 1000); 
-    
-    // Khởi tạo Music Player
     initPlaylist();
     loadTrack(0);
 });
 
-// Cập nhật tiến trình nhạc (Progress Bar & Time)
+window.addEventListener('resize', () => {
+    resize();
+    keepPlayerInBounds(); // Đảm bảo player không văng khỏi màn hình khi resize
+});
+
+// Cập nhật tiến trình nhạc (Đã sửa lỗi cú pháp)
 music.ontimeupdate = () => {
     if (music.duration) {
         const progressPercent = (music.currentTime / music.duration) * 100;
-        progressBar.style.width = progressPercent + "%";
+        if (progressBar) progressBar.style.width = progressPercent + "%";
         
         document.getElementById("currentTime").innerText = formatTime(music.currentTime);
         document.getElementById("durationTime").innerText = formatTime(music.duration);
     }
 };
 
-// Tự động chuyển bài khi kết thúc
 music.onended = nextTrack;
 
 // =========================================
-// 3. CÁC HÀM HIỆU ỨNG (VISUALS)
+// 3. HIỆU ỨNG VISUALS
 // =========================================
 
 function resize() {
@@ -119,7 +116,6 @@ function toggleSkill(header) {
     const icon = header.querySelector('.icon');
     const isOpen = item.classList.contains('active');
     
-    // Đóng các mục khác (Accordion mode)
     document.querySelectorAll('.skill-item').forEach(el => {
         el.classList.remove('active');
         el.querySelector('.skill-content').style.maxHeight = null;
@@ -134,7 +130,7 @@ function toggleSkill(header) {
 }
 
 // =========================================
-// 4. LOGIC TRÌNH PHÁT NHẠC (MUSIC PLAYER)
+// 4. MUSIC PLAYER LOGIC
 // =========================================
 
 function initPlaylist() {
@@ -155,11 +151,9 @@ function loadTrack(index) {
     music.src = `assets/${tracks[index].file}`;
     if (trackName) trackName.innerText = tracks[index].name;
     
-    // Reset thời gian và animation
     document.getElementById("currentTime").innerText = "00:00";
     document.getElementById("durationTime").innerText = "00:00";
     
-    // Reset hiệu ứng chữ chạy
     trackName.style.animation = 'none';
     trackName.offsetHeight; 
     trackName.style.animation = null;
@@ -191,7 +185,7 @@ function updateUI(isPlaying) {
 
 function toggleMusic() {
     if (music.paused) {
-        music.play().then(() => updateUI(true)).catch(e => console.log("Click required"));
+        music.play().then(() => updateUI(true)).catch(e => console.log("User interaction required"));
     } else {
         music.pause();
         updateUI(false);
@@ -211,27 +205,99 @@ function prevTrack() {
 }
 
 function setProgress(e) {
-    const width = document.querySelector('.progress-container').clientWidth;
+    const container = document.querySelector('.progress-container');
+    const width = container.clientWidth;
     const clickX = e.offsetX;
     if (music.duration) music.currentTime = (clickX / width) * music.duration;
 }
 
 function togglePlayer() {
-    const player = document.getElementById('mainPlayer');
-    const minBtn = document.querySelector('.minimize-btn');
+    const icon = document.getElementById('toggleIcon');
     player.classList.toggle('minimized');
-    minBtn.innerText = player.classList.contains('minimized') ? "[ + ]" : "[ _ ]";
+    icon.className = player.classList.contains('minimized') ? 'fas fa-expand-alt' : 'fas fa-minus';
 }
 
 function togglePlaylist() {
     const playlist = document.getElementById('playlist');
     const toggleBtn = document.querySelector('.toggle-list');
     playlist.classList.toggle('show');
-    toggleBtn.innerText = playlist.classList.contains('show') ? "> HIDE_PLAYLIST" : "> VIEW_PLAYLIST";
+    toggleBtn.innerHTML = playlist.classList.contains('show') ? `<i class="fas fa-list"></i> HIDE_PLAYLIST` : `<i class="fas fa-list"></i> VIEW_PLAYLIST`;
 }
 
 function formatTime(seconds) {
+    if (isNaN(seconds)) return "00:00";
     const min = Math.floor(seconds / 60);
     const sec = Math.floor(seconds % 60);
     return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+}
+
+// =========================================
+// 5. MENU MOBILE & DRAG LOGIC
+// =========================================
+
+const menu = document.querySelector('#mobile-menu');
+const menuLinks = document.querySelector('.nav-menu');
+
+menu.addEventListener('click', () => {
+    menu.classList.toggle('is-active');
+    menuLinks.classList.toggle('active');
+});
+
+document.querySelectorAll('.nav-menu a').forEach(n => n.addEventListener('click', () => {
+    menu.classList.remove('is-active');
+    menuLinks.classList.remove('active');
+}));
+
+// DRAGGABLE PLAYER
+let isDragging = false;
+let offsetX, offsetY;
+
+player.addEventListener('mousedown', (e) => {
+    if (e.target.closest('button') || e.target.closest('.progress-container') || e.target.closest('.playlist')) return;
+
+    isDragging = true;
+    const rect = player.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+    player.style.transition = 'none';
+});
+
+document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+
+    let x = e.clientX - offsetX;
+    let y = e.clientY - offsetY;
+
+    const maxX = window.innerWidth - player.offsetWidth;
+    const maxY = window.innerHeight - player.offsetHeight;
+    
+    x = Math.max(0, Math.min(x, maxX));
+    y = Math.max(0, Math.min(y, maxY));
+
+    player.style.left = `${x}px`;
+    player.style.top = `${y}px`;
+    player.style.right = 'auto';
+});
+
+document.addEventListener('mouseup', () => {
+    if (isDragging) {
+        isDragging = false;
+        player.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+    }
+});
+
+function keepPlayerInBounds() {
+    const rect = player.getBoundingClientRect();
+    const padding = 20;
+    let newX = rect.left;
+    let newY = rect.top;
+
+    if (rect.right > window.innerWidth) newX = window.innerWidth - rect.width - padding;
+    if (rect.bottom > window.innerHeight) newY = window.innerHeight - rect.height - padding;
+    if (rect.left < 0) newX = padding;
+    if (rect.top < 0) newY = padding;
+
+    player.style.left = `${newX}px`;
+    player.style.top = `${newY}px`;
+    player.style.right = 'auto';
 }
