@@ -43,7 +43,17 @@ const tracks = [
     { name: "Highway", file: "highway.mp3" },
     { name: "Waiting", file: "waiting.mp3" },
     { name: "Late Breakfast", file: "late breakfast.mp3" },
-    { name: "〒160-0014 Tokyo '82", file: "〒160-0014 tokyo '82.mp3" }
+    { name: "〒160-0014 Tokyo '82", file: "〒160-0014 tokyo '82.mp3" },
+    // --- Các bài mới đã được định dạng lại ---
+    { name: "Deep Thinking Lofi", file: "absolutesound-deep-thinking-lofi-music-510766.mp3" },
+    { name: "Late Night Lofi", file: "absolutesound-late-night-lofi-497896.mp3" },
+    { name: "Aventure Lofi Vlog", file: "aventure-lofi-vlog-chill-beat-508265.mp3" },
+    { name: "Good Night Lofi", file: "fassounds-good-night-lofi-cozy-chill-music-160166.mp3" },
+    { name: "Lofi Study Calm", file: "fassounds-lofi-study-calm-peaceful-chill-hop-112191.mp3" },
+    { name: "Coffee Lofi", file: "lofi_music_library-coffee-lofi-lofi-music-chill-ambient-458900.mp3" },
+    { name: "Lofi Girl Chill", file: "monume-lofi-lofi-girl-lofi-chill-509453.mp3" },
+    { name: "Lofi Chill Girl", file: "paulyudin-lofi-lofi-chill-lofi-girl-482399.mp3" },
+    { name: "The Mountain Lofi", file: "the_mountain-lofi-lofi-music-496553.mp3" }
 ];
 let currentTrackIndex = 0;
 
@@ -61,10 +71,9 @@ window.addEventListener('load', () => {
 
 window.addEventListener('resize', () => {
     resize();
-    keepPlayerInBounds(); // Đảm bảo player không văng khỏi màn hình khi resize
+    keepPlayerInBounds(); 
 });
 
-// Cập nhật tiến trình nhạc (Đã sửa lỗi cú pháp)
 music.ontimeupdate = () => {
     if (music.duration) {
         const progressPercent = (music.currentTime / music.duration) * 100;
@@ -81,11 +90,21 @@ music.onended = nextTrack;
 // 3. HIỆU ỨNG VISUALS
 // =========================================
 
+let lastWidth = window.innerWidth;
+
 function resize() {
+    // Chỉ chạy logic resize nếu chiều rộng thực sự thay đổi
+    if (window.innerWidth === lastWidth && canvas.height > 0) return;
+    
+    lastWidth = window.innerWidth;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    
     columns = Math.floor(canvas.width / fontSize);
-    drops = Array(columns).fill(1);
+    
+    // Giữ nguyên vị trí các giọt nước cũ nếu có thể, chỉ thêm mới nếu thiếu
+    const oldDrops = drops || [];
+    drops = Array(columns).fill(1).map((val, i) => oldDrops[i] || 1);
 }
 
 function drawMatrix() {
@@ -231,6 +250,26 @@ function formatTime(seconds) {
     return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
 }
 
+function keepPlayerInBounds() {
+    const rect = player.getBoundingClientRect();
+    const navHeight = 25;
+    const gap = 10;
+
+    let x = rect.left;
+    let y = rect.top;
+
+    const maxX = window.innerWidth - player.offsetWidth;
+    const maxY = window.innerHeight - player.offsetHeight;
+
+    if (x < 0) x = 0;
+    if (x > maxX) x = maxX;
+    if (y < navHeight + gap) y = navHeight + gap;
+    if (y > maxY) y = maxY;
+
+    player.style.left = `${x}px`;
+    player.style.top = `${y}px`;
+}
+
 // =========================================
 // 5. MENU MOBILE & DRAG LOGIC
 // =========================================
@@ -287,7 +326,7 @@ const dragging = (e) => {
     y = Math.max(0, Math.min(y, maxY));
 
     player.style.left = `${x}px`;
-    player.style.top = `${y}px`;
+    player.style.top = `${y + 65}px`;
     player.style.right = 'auto';
 };
 

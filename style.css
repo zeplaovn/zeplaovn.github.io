@@ -97,12 +97,14 @@ nav.main-content {
 }
 
 .nav-menu a {
-  color: #fff;
+  /*color: #fff;*/
   font-size: 0.9rem;
   transition: var(--transition-fast);
   display: flex;
   align-items: center;
   gap: 8px;
+  /*color: var(--neon-green);*/
+
 }
 
 .nav-menu a:hover {
@@ -130,16 +132,16 @@ nav.main-content {
    ========================================= */
 
 
-/* Thêm vào phần 4 hoặc phần 8 trong CSS của bạn */
+
 .page-wrapper {
-    padding-top: 80px; /* Chiều cao Navbar (60px) + 20px khoảng cách an toàn */
+    padding-top: 80px; 
     position: relative;
     z-index: 1;
 }
 
 /* Tối ưu riêng cho Hero Section */
 #hero {
-    min-height: 40vh; /* Giảm xuống một chút nếu nó quá dài */
+    min-height: 40vh; 
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -192,7 +194,6 @@ nav.main-content {
     font-family: 'Fira Code', monospace;
 }
 
-/* Nếu muốn highlight dạng nền (cho các từ khóa quan trọng hơn) */
 span.highlight-bg {
     background: var(--neon-green);
     color: #000;
@@ -282,17 +283,17 @@ th, td { border: 1px solid var(--primary-dim); padding: 12px; }
   position: fixed;
   top: 85px;
   right: 20px;
-  left: auto; /* Reset để tránh xung đột khi kéo */
+  left: auto; 
   z-index: 1001;
   background: var(--glass);
   border: 1px solid var(--neon-green);
   padding: 10px;
   box-shadow: var(--neon-glow);
   backdrop-filter: blur(5px);
-  transition: transform 0.2s ease, box-shadow 0.2s ease; /* Không dùng transition cho top/left khi kéo */
+  transition: transform 0.2s ease, box-shadow 0.2s ease; 
   cursor: grab;
   user-select: none;
-  touch-action: ;
+  touch-action: none;
 }
 
 .music-player:active { cursor: grabbing; }
@@ -334,19 +335,18 @@ th, td { border: 1px solid var(--primary-dim); padding: 12px; }
   right: 10% !important;
   transform: translate(50%, -50%) !important;
 }
-/* Sửa lại đoạn CSS cũ này */
+
 .music-player.minimized .player-body {
-  display: none; /* Vẫn ẩn các nút điều khiển và playlist */
+  display: none; 
 }
 
 /* KHÔNG ẩn #status nữa */
 .music-player.minimized #status {
   display: block; 
   font-size: 0.6rem;
-  margin-right: 25px; /* Tạo khoảng trống cho nút minimize */
+  margin-right: 25px; 
 }
 
-/* Đảm bảo header căn giữa khi thu nhỏ */
 .music-player.minimized .player-header {
   justify-content: center;
   padding: 5px;
@@ -393,7 +393,7 @@ th, td { border: 1px solid var(--primary-dim); padding: 12px; }
    ========================================= */
 .time-display {
     display: flex;
-    justify-content: space-between; /* Đẩy 2 mốc thời gian về 2 phía */
+    justify-content: space-between; 
     font-size: 0.75rem;
     color: var(--neon-green);
     font-family: 'Fira Code', monospace;
@@ -403,7 +403,7 @@ th, td { border: 1px solid var(--primary-dim); padding: 12px; }
 
 #currentTime, #durationTime {
     text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
-    min-width: 40px; /* Giữ vị trí cố định khi con số thay đổi */
+    min-width: 40px; 
 }
 
 /* Tùy chỉnh thêm cho Progress Container để không bị dính sát vào thời gian */
