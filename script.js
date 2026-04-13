@@ -252,21 +252,33 @@ document.querySelectorAll('.nav-menu a').forEach(n => n.addEventListener('click'
 let isDragging = false;
 let offsetX, offsetY;
 
-player.addEventListener('mousedown', (e) => {
+const startDrag = (e) => {
+    // Kiểm tra nếu bấm vào nút hoặc thanh progress thì không kéo
     if (e.target.closest('button') || e.target.closest('.progress-container') || e.target.closest('.playlist')) return;
 
     isDragging = true;
     const rect = player.getBoundingClientRect();
-    offsetX = e.clientX - rect.left;
-    offsetY = e.clientY - rect.top;
+    
+    // Lấy tọa độ (hỗ trợ cả Touch và Mouse)
+    const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+    const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+
+    offsetX = clientX - rect.left;
+    offsetY = clientY - rect.top;
     player.style.transition = 'none';
-});
+};
 
-document.addEventListener('mousemove', (e) => {
+const dragging = (e) => {
     if (!isDragging) return;
+    
+    // Ngăn chặn cuộn trang trên mobile khi đang kéo
+    if (e.type === 'touchmove') e.preventDefault();
 
-    let x = e.clientX - offsetX;
-    let y = e.clientY - offsetY;
+    const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+    const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+
+    let x = clientX - offsetX;
+    let y = clientY - offsetY;
 
     const maxX = window.innerWidth - player.offsetWidth;
     const maxY = window.innerHeight - player.offsetHeight;
@@ -277,27 +289,21 @@ document.addEventListener('mousemove', (e) => {
     player.style.left = `${x}px`;
     player.style.top = `${y}px`;
     player.style.right = 'auto';
-});
+};
 
-document.addEventListener('mouseup', () => {
+const stopDrag = () => {
     if (isDragging) {
         isDragging = false;
         player.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
     }
-});
+};
 
-function keepPlayerInBounds() {
-    const rect = player.getBoundingClientRect();
-    const padding = 20;
-    let newX = rect.left;
-    let newY = rect.top;
+// Sự kiện Chuột
+player.addEventListener('mousedown', startDrag);
+document.addEventListener('mousemove', dragging);
+document.addEventListener('mouseup', stopDrag);
 
-    if (rect.right > window.innerWidth) newX = window.innerWidth - rect.width - padding;
-    if (rect.bottom > window.innerHeight) newY = window.innerHeight - rect.height - padding;
-    if (rect.left < 0) newX = padding;
-    if (rect.top < 0) newY = padding;
-
-    player.style.left = `${newX}px`;
-    player.style.top = `${newY}px`;
-    player.style.right = 'auto';
-}
+// Sự kiện Chạm (Mobile)
+player.addEventListener('touchstart', startDrag, { passive: false });
+document.addEventListener('touchmove', dragging, { passive: false });
+document.addEventListener('touchend', stopDrag);

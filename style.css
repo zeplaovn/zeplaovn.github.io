@@ -292,7 +292,7 @@ th, td { border: 1px solid var(--primary-dim); padding: 12px; }
   transition: transform 0.2s ease, box-shadow 0.2s ease; /* Không dùng transition cho top/left khi kéo */
   cursor: grab;
   user-select: none;
-  touch-action: none;
+  touch-action: ;
 }
 
 .music-player:active { cursor: grabbing; }
