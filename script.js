@@ -44,7 +44,6 @@ const tracks = [
     { name: "Waiting", file: "waiting.mp3" },
     { name: "Late Breakfast", file: "late breakfast.mp3" },
     { name: "〒160-0014 Tokyo '82", file: "〒160-0014 tokyo '82.mp3" },
-    // --- Các bài mới đã được định dạng lại ---
     { name: "Deep Thinking Lofi", file: "absolutesound-deep-thinking-lofi-music-510766.mp3" },
     { name: "Late Night Lofi", file: "absolutesound-late-night-lofi-497896.mp3" },
     { name: "Aventure Lofi Vlog", file: "aventure-lofi-vlog-chill-beat-508265.mp3" },
@@ -70,7 +69,7 @@ window.addEventListener('load', () => {
 });
 
 window.addEventListener('resize', () => {
-    resize();
+    // resize();
     keepPlayerInBounds(); 
 });
 
@@ -90,21 +89,36 @@ music.onended = nextTrack;
 // 3. HIỆU ỨNG VISUALS
 // =========================================
 
-let lastWidth = window.innerWidth;
+/**
+ * Đảm bảo Player luôn nằm trong vùng hiển thị khi thay đổi kích thước màn hình
+ */
+function keepPlayerInBounds() {
+    const rect = player.getBoundingClientRect();
+    const maxX = window.innerWidth - rect.width;
+    const maxY = window.innerHeight - rect.height;
+
+    // Lấy vị trí hiện tại
+    let currentX = rect.left;
+    let currentY = rect.top;
+
+    // Kiểm tra và điều chỉnh nếu vượt quá biên phải hoặc biên dưới
+    let newX = Math.max(0, Math.min(currentX, maxX));
+    let newY = Math.max(0, Math.min(currentY, maxY));
+
+    // Cập nhật lại vị trí
+    player.style.left = `${newX}px`;
+    player.style.top = `${newY}px`;
+    
+    // Xóa thuộc tính right/bottom để tránh xung đột với left/top khi resize
+    player.style.right = 'auto';
+    player.style.bottom = 'auto';
+}
 
 function resize() {
-    // Chỉ chạy logic resize nếu chiều rộng thực sự thay đổi
-    if (window.innerWidth === lastWidth && canvas.height > 0) return;
-    
-    lastWidth = window.innerWidth;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    
     columns = Math.floor(canvas.width / fontSize);
-    
-    // Giữ nguyên vị trí các giọt nước cũ nếu có thể, chỉ thêm mới nếu thiếu
-    const oldDrops = drops || [];
-    drops = Array(columns).fill(1).map((val, i) => oldDrops[i] || 1);
+    drops = Array(columns).fill(1);
 }
 
 function drawMatrix() {
@@ -248,26 +262,6 @@ function formatTime(seconds) {
     const min = Math.floor(seconds / 60);
     const sec = Math.floor(seconds % 60);
     return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
-}
-
-function keepPlayerInBounds() {
-    const rect = player.getBoundingClientRect();
-    const navHeight = 25;
-    const gap = 10;
-
-    let x = rect.left;
-    let y = rect.top;
-
-    const maxX = window.innerWidth - player.offsetWidth;
-    const maxY = window.innerHeight - player.offsetHeight;
-
-    if (x < 0) x = 0;
-    if (x > maxX) x = maxX;
-    if (y < navHeight + gap) y = navHeight + gap;
-    if (y > maxY) y = maxY;
-
-    player.style.left = `${x}px`;
-    player.style.top = `${y}px`;
 }
 
 // =========================================
