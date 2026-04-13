@@ -18,6 +18,10 @@
 }
 
 body {
+  -webkit-user-select: none; /* Chrome, Safari, Opera */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* IE/Edge */
+  user-select: none;         /* Tiêu chuẩn */
   background-color: var(--bg-dark);
   color: var(--neon-green);
   font-family: 'Fira Code', monospace;
@@ -442,4 +446,40 @@ th, td { border: 1px solid var(--primary-dim); padding: 12px; }
   .music-player { width: 220px; right: 10px; top: 70px; }
   .terminal-body { font-size: 0.85rem; }
   .logo { font-size: 1.1rem; }
+}
+
+/*Easter egg*/
+
+/* Hiệu ứng rung lắc và nhiễu hình */
+@keyframes glitch {
+    0% {
+        transform: translate(0);
+        text-shadow: -2px 0 red, 2px 0 blue;
+    }
+    20% {
+        transform: translate(-3px, 3px);
+        text-shadow: 2px 0 red, -2px 0 blue;
+    }
+    40% {
+        transform: translate(-3px, -3px);
+        filter: hue-rotate(90deg) saturate(2);
+    }
+    60% {
+        transform: translate(3px, 3px);
+        text-shadow: -2px 0 lime, 2px 0 ff00ff;
+    }
+    80% {
+        transform: translate(3px, -3px);
+        filter: invert(0.2);
+    }
+    100% {
+        transform: translate(0);
+    }
+}
+
+/* Class này sẽ được JS thêm vào canvas hoặc body */
+.glitch-active {
+    animation: glitch 0.15s infinite;
+    pointer-events: none; /* Ngăn người dùng click tiếp khi đang lỗi */
+    user-select: none;
 }

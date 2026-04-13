@@ -59,10 +59,14 @@ let currentTrackIndex = 0;
 // =========================================
 // 2. KHỞI TẠO & LẮNG NGHE SỰ KIỆN
 // =========================================
+function animate() {
+    drawMatrix();
+    requestAnimationFrame(animate);
+}
 
 window.addEventListener('load', () => {
     resize();
-    setInterval(drawMatrix, 50);
+    animate();
     setTimeout(typewriter, 1000); 
     initPlaylist();
     loadTrack(0);
@@ -340,3 +344,94 @@ document.addEventListener('mouseup', stopDrag);
 player.addEventListener('touchstart', startDrag, { passive: false });
 document.addEventListener('touchmove', dragging, { passive: false });
 document.addEventListener('touchend', stopDrag);
+
+// Easter Egg
+// Chặn chuột phải
+document.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    alert("Menu is blocked in this web :))");
+});
+
+
+const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+let konamiIndex = 0;
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === konamiCode[konamiIndex]) {
+        konamiIndex++;
+        if (konamiIndex === konamiCode.length) {
+            activateEasterEgg();
+            // activateRedAlert();
+            konamiIndex = 0;
+        }
+    } else {
+        konamiIndex = 0;
+    }
+});
+
+function activateEasterEgg() {
+    alert("SYSTEM OVERRIDE: Admin Access Granted!");
+    // triggerSecurityRed()
+    document.body.style.filter = "hue-rotate(240deg) brightness(1.2) contrast(1.5)";
+
+}
+// console devtool 
+console.clear();
+console.log(
+    `%c STOP! %c\n\nFriend đang cố gắng thâm nhập hệ thống ?\nĐây là khu vực bảo mật. Chúc bạn may mắn, Hacker!`,
+    "color: red; font-size: 40px; font-weight: bold; -webkit-text-stroke: 1px black;",
+    "color: #00ff41; font-size: 16px;"
+);
+
+console.log(`%c
+███╗   ██╗ ██████╗ ████████╗    ███████╗ ██████╗ ██████╗     ██╗   ██╗ ██████╗ ██╗   ██╗      ███╗   ██╗ █████╗ ██╗  ██╗    ██╗██╗██╗██╗
+████╗  ██║██╔═══██╗╚══██╔══╝    ██╔════╝██╔═══██╗██╔══██╗    ╚██╗ ██╔╝██╔═══██╗██║   ██║      ████╗  ██║██╔══██╗██║  ██║    ██║██║██║██║
+██╔██╗ ██║██║   ██║   ██║       █████╗  ██║   ██║██████╔╝     ╚████╔╝ ██║   ██║██║   ██║      ██╔██╗ ██║███████║███████║    ██║██║██║██║
+██║╚██╗██║██║   ██║   ██║       ██╔══╝  ██║   ██║██╔══██╗      ╚██╔╝  ██║   ██║██║   ██║      ██║╚██╗██║██╔══██║██╔══██║    ╚═╝╚═╝╚═╝╚═╝
+██║ ╚████║╚██████╔╝   ██║       ██║     ╚██████╔╝██║  ██║       ██║   ╚██████╔╝╚██████╔╝ ▄█╗  ██║ ╚████║██║  ██║██║  ██║    ██╗██╗██╗██╗
+╚═╝  ╚═══╝ ╚═════╝    ╚═╝       ╚═╝      ╚═════╝ ╚═╝  ╚═╝       ╚═╝    ╚═════╝  ╚═════╝  ╚═╝  ╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝    ╚═╝╚═╝╚═╝╚═╝
+`, "color: #ff0000;");
+console.log = () => {};
+console.warn = () => {};
+console.error = () => {};
+
+function activateRedAlert() { 
+    // Xoay màu từ Xanh Neon sang Đỏ
+    document.body.style.filter = "hue-rotate(240deg) brightness(1.2) contrast(1.5)";
+    
+    // Thêm hiệu ứng rung lắc (nếu đã thêm CSS glitch ở bước trước)
+    document.body.classList.add('glitch-active');
+    
+    if (statusText) {
+        statusText.innerText = "SECURITY_BREACH_DETECTED";
+        statusText.style.color = "white"; // Màu chữ nổi bật trên nền đỏ
+    }
+}
+let clickCount = 0;
+const logo = document.querySelector('#easter_egg'); 
+
+logo.addEventListener('click', () => {
+    clickCount++;
+    
+    if (clickCount === 5) {
+        // Thêm class hiệu ứng vào cả body hoặc canvas
+        document.body.classList.add('glitch-active');
+        
+        if (statusText) {
+            statusText.innerText = "CRITICAL_SYSTEM_FAILURE";
+            statusText.style.color = "#ff0000";
+        }
+
+        // Sau 2 giây thì hồi phục hệ thống
+        setTimeout(() => {
+            document.body.classList.remove('glitch-active');
+            if (statusText) {
+                statusText.innerText = "SYSTEM_RESTORED";
+                statusText.style.color = "var(--neon-green)";
+            }
+            clickCount = 0;
+        }, 2000);
+    }
+});
+
+

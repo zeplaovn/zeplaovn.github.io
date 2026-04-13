@@ -4,17 +4,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>zeplaovn | Security Researcher & CTF Player</title>
+  <title>ZEPLAO.VN | Cyber Portfolio</title>
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data:;">
+
+  <meta http-equiv="X-Frame-Options" content="DENY">
+
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
+
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
 
   <meta name="description"
     content="Portfolio của zeplaovn - Security Researcher chuyên về Web Exploitation, Pwn và Reverse Engineering.">
   <meta name="keywords" content="zeplaovn, cybersecurity, ctf player, security researcher, bug bounty">
   <meta name="author" content="zeplaovn">
 
-  <meta property="og:title" content="zeplaovn | Security Researcher Portfolio">
-  <meta property="og:description" content="Khám phá kỹ năng và thành tích giải thưởng CTF của zeplaovn.">
+  <meta property="og:title" content="zeplaovn Portfolio">
+  <meta property="og:description" content="Breaking Server - Breaking world">
   <meta property="og:type" content="website">
-
   <link rel="icon" href="favicon.ico" type="image/x-icon">
 
   <link rel="stylesheet" href="style.css">
@@ -28,75 +37,75 @@
 
   <header id="navbar">
     <nav class="main-content">
-        <div class="logo" aria-label="zeplaovn logo">ZEPLAO<span>VN</span></div>
-        
-        <div class="menu-toggle" id="mobile-menu">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </div>
+      <div class="logo" aria-label="zeplaovn logo"><a href="index.html">ZEPLAO<span>VN</span></a></div>
 
-        <ul class="nav-menu">
-            <li><a href="#about"><i class="fas fa-user-secret"></i> <span>About</span></a></li>
-            <li><a href="#skills"><i class="fas fa-code"></i> <span>Skills</span></a></li>
-            <li><a href="#profiles"><i class="fas fa-terminal"></i> <span>Profiles</span></a></li>
-            <li><a href="#ctf"><i class="fas fa-trophy"></i> <span>CTF</span></a></li>
-        </ul>
+      <div class="menu-toggle" id="mobile-menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </div>
+
+      <ul class="nav-menu">
+        <li><a href="#about"><i class="fas fa-user-secret"></i> <span>About</span></a></li>
+        <li><a href="#skills"><i class="fas fa-code"></i> <span>Skills</span></a></li>
+        <li><a href="#profiles"><i class="fas fa-terminal"></i> <span>Profiles</span></a></li>
+        <li><a href="#ctf"><i class="fas fa-trophy"></i> <span>CTF</span></a></li>
+      </ul>
     </nav>
-</header>
+  </header>
 
-<aside class="music-player" id="mainPlayer" aria-label="Music Player">
+  <aside class="music-player" id="mainPlayer" aria-label="Music Player">
     <div class="player-header">
-        <div id="status" class="blink">SYSTEM OFFLINE</div>
-        <button class="minimize-btn" onclick="togglePlayer()" title="Toggle Player">
-            <i class="fas fa-minus" id="toggleIcon"></i>
-        </button>
+      <div id="status" class="blink">SYSTEM OFFLINE</div>
+      <button class="minimize-btn" onclick="togglePlayer()" title="Toggle Player">
+        <i class="fas fa-minus" id="toggleIcon"></i>
+      </button>
     </div>
 
     <div class="player-body" id="playerBody">
-        <div class="track-info">
-            <div class="track-text-container">
-                <div id="trackName" class="scrolling-text">Waiting for system init...</div>
-            </div>
+      <div class="track-info">
+        <div class="track-text-container">
+          <div id="trackName" class="scrolling-text">Waiting for system init...</div>
         </div>
+      </div>
 
-        <div class="progress-container" id="progressContainer" onclick="setProgress(event)">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
+      <div class="progress-container" id="progressContainer" onclick="setProgress(event)">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
 
-        <div class="time-display">
-            <span id="currentTime">00:00</span>
-            <span id="durationTime">00:00</span>
-        </div>
+      <div class="time-display">
+        <span id="currentTime">00:00</span>
+        <span id="durationTime">00:00</span>
+      </div>
 
-        <div class="buttons">
-            <button onclick="prevTrack()" aria-label="Previous Track">
-                <i class="fas fa-backward"></i>
-            </button>
-            <button id="playBtn" onclick="toggleMusic()" aria-label="Play/Pause">
-                <i class="fas fa-play"></i>
-            </button>
-            <button onclick="nextTrack()" aria-label="Next Track">
-                <i class="fas fa-forward"></i>
-            </button>
-        </div>
-
-        <button class="toggle-list" onclick="togglePlaylist()">
-            <i class="fas fa-list"></i> <span id="toggleText">VIEW_PLAYLIST</span>
+      <div class="buttons">
+        <button onclick="prevTrack()" aria-label="Previous Track">
+          <i class="fas fa-backward"></i>
         </button>
-        
-        <ul class="playlist" id="playlist"></ul>
+        <button id="playBtn" onclick="toggleMusic()" aria-label="Play/Pause">
+          <i class="fas fa-play"></i>
+        </button>
+        <button onclick="nextTrack()" aria-label="Next Track">
+          <i class="fas fa-forward"></i>
+        </button>
+      </div>
+
+      <button class="toggle-list" onclick="togglePlaylist()">
+        <i class="fas fa-list"></i> <span id="toggleText">VIEW_PLAYLIST</span>
+      </button>
+
+      <ul class="playlist" id="playlist"></ul>
     </div>
 
     <audio id="bgMusic"></audio>
-</aside>
+  </aside>
 
   <main class="page-wrapper">
     <div class="main-content">
 
       <section id="hero">
         <div class="terminal-text">
-          <h1 class="highlight">> System.init("<span class="blink" >zeplaovn</span>");</h1>
+          <h1 class="highlight">> System.init("<span class="blink" id="easter_egg">zeplaovn</span>");</h1>
           <p id="typewriter" style="display: inline;"></p>
           <span class="cursor blink">_</span>
         </div>
@@ -335,6 +344,7 @@
   </main>
 
   <script src="script.js"></script>
+  <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
 </body>
 
 </html>
