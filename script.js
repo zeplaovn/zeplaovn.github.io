@@ -1,437 +1,540 @@
 /**
- * ZEPLAO.VN - Cyber Portfolio Logic
+ * ZEPLAO.VN — Cyber Portfolio Script
+ * Updated: Single-file audio + chapter tracklist, mobile-optimized drag, accessibility
  */
 
+'use strict';
+
 // =========================================
-// 1. KHAI BÁO BIẾN TOÀN CỤC
+// 1. TRACKLIST — Chapter timestamps (seconds)
 // =========================================
-
-const message = "Cyber Security Enthusiast - CTF Player - Researcher";
-let typeIndex = 0;
-
-// Matrix Rain
-const canvas = document.getElementById('matrixCanvas');
-const ctx = canvas.getContext('2d');
-let columns, drops;
-const letters = "0101010101010101ABCDEFHIJKLMNOPQRSTUVWXYZ";
-const fontSize = 16;
-
-// Music Player
-const music = document.getElementById("bgMusic");
-const playBtn = document.getElementById("playBtn");
-const statusText = document.getElementById("status");
-const progressBar = document.getElementById("progressBar");
-const trackName = document.getElementById("trackName");
-const playlistElement = document.getElementById("playlist");
-const player = document.getElementById('mainPlayer');
-
 const tracks = [
-    { name: "a-y-o", file: "a-y-o.mp3" },
-    { name: "Rainy Sunday", file: "rainy sunday.mp3" },
-    { name: "Amano", file: "amano.mp3" },
-    { name: "Saturday", file: "saturday.mp3" },
-    { name: "Anubias", file: "anubias.mp3" },
-    { name: "Shinjuki Gyoen", file: "shinjuki gyoen.mp3" },
-    { name: "Campus Coffee", file: "campus coffee.mp3" },
-    { name: "Shinjuku Gyoen -WIP-", file: "shinjuku gyoen -wip-.mp3" },
-    { name: "End of Tape", file: "end of tape.mp3" },
-    { name: "Tears Pt. 2", file: "tears pt. 2.mp3" },
-    { name: "Frappe Girl", file: "frappe girl.mp3" },
-    { name: "Tears Pt. 3", file: "tears pt. 3.mp3" },
-    { name: "Full Moon", file: "full moon.mp3" },
-    { name: "Tinytokyo", file: "tinytokyo.mp3" },
-    { name: "Highway", file: "highway.mp3" },
-    { name: "Waiting", file: "waiting.mp3" },
-    { name: "Late Breakfast", file: "late breakfast.mp3" },
-    { name: "〒160-0014 Tokyo '82", file: "〒160-0014 tokyo '82.mp3" },
-    { name: "Deep Thinking Lofi", file: "absolutesound-deep-thinking-lofi-music-510766.mp3" },
-    { name: "Late Night Lofi", file: "absolutesound-late-night-lofi-497896.mp3" },
-    { name: "Aventure Lofi Vlog", file: "aventure-lofi-vlog-chill-beat-508265.mp3" },
-    { name: "Good Night Lofi", file: "fassounds-good-night-lofi-cozy-chill-music-160166.mp3" },
-    { name: "Lofi Study Calm", file: "fassounds-lofi-study-calm-peaceful-chill-hop-112191.mp3" },
-    { name: "Coffee Lofi", file: "lofi_music_library-coffee-lofi-lofi-music-chill-ambient-458900.mp3" },
-    { name: "Lofi Girl Chill", file: "monume-lofi-lofi-girl-lofi-chill-509453.mp3" },
-    { name: "Lofi Chill Girl", file: "paulyudin-lofi-lofi-chill-lofi-girl-482399.mp3" },
-    { name: "The Mountain Lofi", file: "the_mountain-lofi-lofi-music-496553.mp3" }
+  { name: "Blue Wednesday - Anther",                    start:    0 },
+  { name: "No Spirit, marsquake - blue skies",          start:  189 },
+  { name: "xander., lucid keys - home in spring",       start:  334 },
+  { name: "aimless, G Mills - New Leaf",                start:  507 },
+  { name: "Deauxnuts, Nokiaa - Nine Leaves",            start:  625 },
+  { name: "softy, eehou - woodnotes",                   start:  751 },
+  { name: "Lazlow - Honeycomb",                         start:  877 },
+  { name: "Takeo, after noon - morning sun",            start: 1015 },
+  { name: "Laffey, azayaka - April Showers",            start: 1151 },
+  { name: "ZENDR, Comodo - Brighter Days",              start: 1277 },
+  { name: "Aboueb, Klemsis - Horizon",                  start: 1381 },
+  { name: "Swink - Back Home",                          start: 1520 },
+  { name: "Solar Body, marsquake - Hummingbird",        start: 1654 },
+  { name: "Casiio, Slo Loris - Wildflowers",            start: 1781 },
+  { name: "Dennisivnvc, Banks - here again",            start: 1937 },
+  { name: "Grisp, tibeauthetraveler - picnicdate",      start: 2065 },
+  { name: "Mondo Loops - Acorn Falls",                  start: 2195 },
+  { name: "morningtime - clover",                       start: 2323 },
+  { name: "Saint Rumi, Towerz - Eggs and Toast",        start: 2485 },
+  { name: "WYS - fresh start",                          start: 2592 },
+  { name: "fnonose - everything grows again",           start: 2736 },
+  { name: "Quist, lov sum - Dewdrops",                  start: 2879 },
+  { name: "Hoogway - Sunny Days Are Back",              start: 2978 },
+  { name: "MyceliumBug, marie - Allium",                start: 3127 },
+  { name: "Nadav Cohen, Odd Panda - komorebi",          start: 3258 },
+  { name: "amies, Hoffy Beats - Lavender",              start: 3408 },
+  { name: "blurred figures, another silent weekend - nakama", start: 3541 },
+  { name: "Kainbeats, after noon - sunmist",            start: 3712 },
 ];
+
+// =========================================
+// 2. GLOBAL STATE
+// =========================================
+const AUDIO_FILE = "assets/cozy spring lofi 🌸 chill music to study & relax.mp3";
+const TYPEWRITER_MSG = "Security Researcher // CTF Player // Bug Bounty Hunter";
+let typeIndex = 0;
 let currentTrackIndex = 0;
 
-// =========================================
-// 2. KHỞI TẠO & LẮNG NGHE SỰ KIỆN
-// =========================================
-function animate() {
-    drawMatrix();
-    requestAnimationFrame(animate);
-}
 
+// Matrix
+const canvas  = document.getElementById('matrixCanvas');
+const ctx     = canvas.getContext('2d');
+let columns, drops;
+const LETTERS   = "01アイウエオカキクケコABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const FONT_SIZE = 14;
+
+
+
+// Player DOM refs (cached once)
+const music          = document.getElementById("bgMusic");
+const playBtn        = document.getElementById("playBtn");
+const statusText     = document.getElementById("status");
+const statusDot      = document.getElementById("statusDot");
+const progressBar    = document.getElementById("progressBar");
+const progressThumb  = document.getElementById("progressThumb");
+const trackNameEl    = document.getElementById("trackName");
+const playlistEl     = document.getElementById("playlist");
+const player         = document.getElementById("mainPlayer");
+const currentTimeEl  = document.getElementById("currentTime");
+const durationTimeEl = document.getElementById("durationTime");
+
+// =========================================
+// 3. INIT
+// =========================================
 window.addEventListener('load', () => {
-    resize();
-    animate();
-    setTimeout(typewriter, 1000); 
-    initPlaylist();
-    loadTrack(0);
+  resizeCanvas();
+  animateMatrix();
+  setTimeout(typewriter, 900);
+  initPlaylist();
+  loadAudio();
+  setupNavActiveOnScroll();
 });
 
-window.addEventListener('resize', () => {
-    // resize();
-    keepPlayerInBounds(); 
-});
-
-music.ontimeupdate = () => {
-    if (music.duration) {
-        const progressPercent = (music.currentTime / music.duration) * 100;
-        if (progressBar) progressBar.style.width = progressPercent + "%";
-        
-        document.getElementById("currentTime").innerText = formatTime(music.currentTime);
-        document.getElementById("durationTime").innerText = formatTime(music.duration);
-    }
-};
-
-music.onended = nextTrack;
+window.addEventListener('resize', debounce(() => {
+  resizeCanvas();
+  keepPlayerInBounds();
+}, 200));
 
 // =========================================
-// 3. HIỆU ỨNG VISUALS
+// 4. MATRIX RAIN
 // =========================================
-
-/**
- * Đảm bảo Player luôn nằm trong vùng hiển thị khi thay đổi kích thước màn hình
- */
-function keepPlayerInBounds() {
-    const rect = player.getBoundingClientRect();
-    const maxX = window.innerWidth - rect.width;
-    const maxY = window.innerHeight - rect.height;
-
-    // Lấy vị trí hiện tại
-    let currentX = rect.left;
-    let currentY = rect.top;
-
-    // Kiểm tra và điều chỉnh nếu vượt quá biên phải hoặc biên dưới
-    let newX = Math.max(0, Math.min(currentX, maxX));
-    let newY = Math.max(0, Math.min(currentY, maxY));
-
-    // Cập nhật lại vị trí
-    player.style.left = `${newX}px`;
-    player.style.top = `${newY}px`;
-    
-    // Xóa thuộc tính right/bottom để tránh xung đột với left/top khi resize
-    player.style.right = 'auto';
-    player.style.bottom = 'auto';
+function resizeCanvas() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  columns = Math.floor(canvas.width / FONT_SIZE);
+  drops   = Array(columns).fill(1);
 }
 
-function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    columns = Math.floor(canvas.width / fontSize);
-    drops = Array(columns).fill(1);
+function animateMatrix() {
+  drawMatrix();
+  requestAnimationFrame(animateMatrix);
 }
 
 function drawMatrix() {
-    ctx.fillStyle = "rgba(0, 8, 0, 0.15)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#00ff41";
-    ctx.font = fontSize + "px monospace";
-    for (let i = 0; i < drops.length; i++) {
-        const text = letters.charAt(Math.floor(Math.random() * letters.length));
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-        drops[i]++;
-    }
+  ctx.fillStyle = "rgba(0, 6, 0, 0.13)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#00ff41";
+  ctx.font = `${FONT_SIZE}px monospace`;
+  for (let i = 0; i < drops.length; i++) {
+    const ch = LETTERS.charAt(Math.floor(Math.random() * LETTERS.length));
+    ctx.fillText(ch, i * FONT_SIZE, drops[i] * FONT_SIZE);
+    if (drops[i] * FONT_SIZE > canvas.height && Math.random() > 0.975) drops[i] = 0;
+    drops[i]++;
+  }
 }
 
+// =========================================
+// 5. TYPEWRITER
+// =========================================
 function typewriter() {
-    const el = document.getElementById("typewriter");
-    if (el && typeIndex < message.length) {
-        el.innerHTML += message.charAt(typeIndex);
-        typeIndex++;
-        setTimeout(typewriter, 60);
-    }
-}
-
-function toggleSkill(header) {
-    const item = header.parentElement;
-    const content = header.nextElementSibling;
-    const icon = header.querySelector('.icon');
-    const isOpen = item.classList.contains('active');
-    
-    document.querySelectorAll('.skill-item').forEach(el => {
-        el.classList.remove('active');
-        el.querySelector('.skill-content').style.maxHeight = null;
-        el.querySelector('.icon').innerText = '▼';
-    });
-
-    if (!isOpen) {
-        item.classList.add('active');
-        content.style.maxHeight = content.scrollHeight + "px";
-        icon.innerText = '▲';
-    }
+  const el = document.getElementById("typewriter");
+  if (!el) return;
+  if (typeIndex < TYPEWRITER_MSG.length) {
+    el.textContent += TYPEWRITER_MSG.charAt(typeIndex++);
+    setTimeout(typewriter, 55);
+  }
 }
 
 // =========================================
-// 4. MUSIC PLAYER LOGIC
+// 6. SKILLS ACCORDION
 // =========================================
+function toggleSkill(btn) {
+  const item    = btn.parentElement;
+  const content = btn.nextElementSibling;
+  const isOpen  = item.classList.contains('active');
 
-function initPlaylist() {
-    playlistElement.innerHTML = "";
-    tracks.forEach((track, index) => {
-        const li = document.createElement("li");
-        li.innerHTML = `<span class="track-num">${(index + 1).toString().padStart(2, '0')}.</span> ${track.name}`;
-        li.onclick = () => {
-            loadTrack(index);
-            music.play().then(() => updateUI(true));
-        };
-        playlistElement.appendChild(li);
-    });
+  // Close all
+  document.querySelectorAll('.skill-item').forEach(el => {
+    el.classList.remove('active');
+    const c = el.querySelector('.skill-content');
+    const inner = el.querySelector('.skill-content-inner');
+    if (c) c.style.maxHeight = null;
+    el.querySelector('.skill-header')?.setAttribute('aria-expanded', 'false');
+  });
+
+  if (!isOpen) {
+    item.classList.add('active');
+    btn.setAttribute('aria-expanded', 'true');
+    // wrap content in inner div if not already
+    let inner = content.querySelector('.skill-content-inner');
+    if (!inner) {
+      // move existing children into a wrapper
+      inner = document.createElement('div');
+      inner.className = 'skill-content-inner';
+      while (content.firstChild) inner.appendChild(content.firstChild);
+      content.appendChild(inner);
+    }
+    content.style.maxHeight = (inner.scrollHeight + 32) + "px";
+  }
 }
 
-function loadTrack(index) {
-    currentTrackIndex = index;
-    music.src = `assets/${tracks[index].file}`;
-    if (trackName) trackName.innerText = tracks[index].name;
-    
-    document.getElementById("currentTime").innerText = "00:00";
-    document.getElementById("durationTime").innerText = "00:00";
-    
-    trackName.style.animation = 'none';
-    trackName.offsetHeight; 
-    trackName.style.animation = null;
+// =========================================
+// 7. AUDIO — single file, chapter-seek
+// =========================================
+function loadAudio() {
+  music.src = AUDIO_FILE;
+  music.preload = "metadata";
+  music.load();
+  updateTrackDisplay(0);
+}
 
+/** Determine which chapter is currently playing based on currentTime */
+function getCurrentChapterIndex() {
+  const t = music.currentTime;
+  let idx = 0;
+  for (let i = tracks.length - 1; i >= 0; i--) {
+    if (t >= tracks[i].start) { idx = i; break; }
+  }
+  return idx;
+}
+
+music.addEventListener('timeupdate', () => {
+  if (!music.duration) return;
+
+  // Progress bar
+  const pct = (music.currentTime / music.duration) * 100;
+  progressBar.style.width = pct + "%";
+  if (progressThumb) progressThumb.style.left = pct + "%";
+
+  // Times
+  currentTimeEl.textContent  = formatTime(music.currentTime);
+  durationTimeEl.textContent = formatTime(music.duration);
+
+  // Auto-update active chapter in playlist
+  const newIdx = getCurrentChapterIndex();
+  if (newIdx !== currentTrackIndex) {
+    currentTrackIndex = newIdx;
+    updateTrackDisplay(currentTrackIndex);
     updatePlaylistUI();
-}
+  }
+});
 
-function updatePlaylistUI() {
-    const items = playlistElement.querySelectorAll("li");
-    items.forEach((li, i) => {
-        li.classList.toggle("active-track", i === currentTrackIndex);
-        li.style.color = (i === currentTrackIndex) ? "var(--neon-green)" : "#fff";
-    });
-}
-
-function updateUI(isPlaying) {
-    if (isPlaying) {
-        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-        statusText.innerText = "SYSTEM ONLINE";
-        statusText.classList.remove("blink");
-        statusText.style.color = "var(--neon-green)";
-    } else {
-        playBtn.innerHTML = '<i class="fas fa-play"></i>';
-        statusText.innerText = "SYSTEM OFFLINE";
-        statusText.classList.add("blink");
-        statusText.style.color = "#ff4141";
-    }
-}
+music.addEventListener('ended', () => updateUI(false));
+music.addEventListener('play',  () => updateUI(true));
+music.addEventListener('pause', () => updateUI(false));
 
 function toggleMusic() {
-    if (music.paused) {
-        music.play().then(() => updateUI(true)).catch(e => console.log("User interaction required"));
-    } else {
-        music.pause();
-        updateUI(false);
-    }
+  if (music.paused) {
+    music.play().catch(() => {});
+  } else {
+    music.pause();
+  }
+}
+
+/** Seek to chapter by index */
+function seekToChapter(index) {
+  currentTrackIndex = index;
+  music.currentTime = tracks[index].start;
+  if (music.paused) {
+    music.play().catch(() => {});
+  }
+  updateTrackDisplay(index);
+  updatePlaylistUI();
 }
 
 function nextTrack() {
-    currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
-    loadTrack(currentTrackIndex);
-    music.play().then(() => updateUI(true));
+  const next = (currentTrackIndex + 1) % tracks.length;
+  seekToChapter(next);
 }
 
 function prevTrack() {
-    currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
-    loadTrack(currentTrackIndex);
-    music.play().then(() => updateUI(true));
+  // If >3s into track, restart chapter; else go previous
+  if (music.currentTime - tracks[currentTrackIndex].start > 3) {
+    music.currentTime = tracks[currentTrackIndex].start;
+  } else {
+    const prev = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+    seekToChapter(prev);
+  }
 }
 
+function updateTrackDisplay(index) {
+  if (!trackNameEl) return;
+  trackNameEl.textContent = tracks[index].name;
+  // Reset scroll animation
+  trackNameEl.style.animation = 'none';
+  void trackNameEl.offsetHeight;
+  trackNameEl.style.animation = null;
+}
+
+function updateUI(isPlaying) {
+  if (isPlaying) {
+    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    statusText.textContent = "ONLINE";
+    statusText.classList.remove("blink");
+    if (statusDot) { statusDot.classList.add('online'); }
+  } else {
+    playBtn.innerHTML = '<i class="fas fa-play"></i>';
+    statusText.textContent = "OFFLINE";
+    statusText.classList.add("blink");
+    if (statusDot) { statusDot.classList.remove('online'); }
+  }
+}
+
+// Progress bar click/drag seek
 function setProgress(e) {
-    const container = document.querySelector('.progress-container');
-    const width = container.clientWidth;
-    const clickX = e.offsetX;
-    if (music.duration) music.currentTime = (clickX / width) * music.duration;
+  const rect  = document.getElementById('progressContainer').getBoundingClientRect();
+  const clickX = e.clientX - rect.left;
+  const ratio  = Math.max(0, Math.min(clickX / rect.width, 1));
+  if (music.duration) music.currentTime = ratio * music.duration;
+}
+
+// Touch seek on progress bar
+let seekingProgress = false;
+const progressContainer = document.getElementById('progressContainer');
+if (progressContainer) {
+  progressContainer.addEventListener('click', setProgress);
+  progressContainer.addEventListener('mousedown', (e) => { seekingProgress = true; setProgress(e); });
+  document.addEventListener('mousemove', (e) => { if (seekingProgress) setProgress(e); });
+  document.addEventListener('mouseup', () => { seekingProgress = false; });
+}
+
+// =========================================
+// 8. PLAYLIST
+// =========================================
+function initPlaylist() {
+  playlistEl.innerHTML = "";
+  tracks.forEach((track, i) => {
+    const li = document.createElement("li");
+    li.setAttribute('role', 'option');
+    li.setAttribute('aria-selected', 'false');
+
+    const num  = document.createElement('span');
+    num.className = 'track-num';
+    num.textContent = formatTime(track.start) + " ";
+
+    const name = document.createTextNode(track.name);
+
+    li.appendChild(num);
+    li.appendChild(name);
+    li.addEventListener('click', () => seekToChapter(i));
+    playlistEl.appendChild(li);
+  });
+  updatePlaylistUI();
+}
+
+function updatePlaylistUI() {
+  const items = playlistEl.querySelectorAll("li");
+  items.forEach((li, i) => {
+    const isActive = i === currentTrackIndex;
+    li.classList.toggle("active-track", isActive);
+    li.setAttribute('aria-selected', isActive ? 'true' : 'false');
+
+    // Auto-scroll active item into view if playlist is open
+    if (isActive && playlistEl.classList.contains('show')) {
+      li.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+  });
 }
 
 function togglePlayer() {
-    const icon = document.getElementById('toggleIcon');
-    player.classList.toggle('minimized');
-    icon.className = player.classList.contains('minimized') ? 'fas fa-expand-alt' : 'fas fa-minus';
+  const icon = document.getElementById('toggleIcon');
+  player.classList.toggle('minimized');
+  const isMin = player.classList.contains('minimized');
+  icon.className = isMin ? 'fas fa-expand-alt' : 'fas fa-minus';
 }
 
 function togglePlaylist() {
-    const playlist = document.getElementById('playlist');
-    const toggleBtn = document.querySelector('.toggle-list');
-    playlist.classList.toggle('show');
-    toggleBtn.innerHTML = playlist.classList.contains('show') ? `<i class="fas fa-list"></i> HIDE_PLAYLIST` : `<i class="fas fa-list"></i> VIEW_PLAYLIST`;
+  const chevron    = document.getElementById('playlistChevron');
+  const toggleBtn  = document.querySelector('.toggle-list-btn');
+  const isOpen     = playlistEl.classList.toggle('show');
+  toggleBtn?.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  if (chevron) chevron.classList.toggle('open', isOpen);
+  if (isOpen) updatePlaylistUI(); // scroll active into view
 }
 
-function formatTime(seconds) {
-    if (isNaN(seconds)) return "00:00";
-    const min = Math.floor(seconds / 60);
-    const sec = Math.floor(seconds % 60);
-    return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+function formatTime(s) {
+  if (isNaN(s) || s < 0) return "00:00";
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
 }
 
 // =========================================
-// 5. MENU MOBILE & DRAG LOGIC
+// 9. NAVIGATION
 // =========================================
+const mobileMenuBtn = document.getElementById('mobile-menu');
+const navMenu       = document.querySelector('.nav-menu');
 
-const menu = document.querySelector('#mobile-menu');
-const menuLinks = document.querySelector('.nav-menu');
+if (mobileMenuBtn) {
+  mobileMenuBtn.addEventListener('click', () => {
+    const expanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true';
+    mobileMenuBtn.setAttribute('aria-expanded', String(!expanded));
+    mobileMenuBtn.classList.toggle('is-active');
+    navMenu.classList.toggle('active');
+  });
+}
 
-menu.addEventListener('click', () => {
-    menu.classList.toggle('is-active');
-    menuLinks.classList.toggle('active');
+// Close nav on link click
+document.querySelectorAll('.nav-menu a').forEach(link => {
+  link.addEventListener('click', () => {
+    mobileMenuBtn?.classList.remove('is-active');
+    mobileMenuBtn?.setAttribute('aria-expanded', 'false');
+    navMenu?.classList.remove('active');
+  });
 });
 
-document.querySelectorAll('.nav-menu a').forEach(n => n.addEventListener('click', () => {
-    menu.classList.remove('is-active');
-    menuLinks.classList.remove('active');
-}));
+// Active nav highlight on scroll
+function setupNavActiveOnScroll() {
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks  = document.querySelectorAll('.nav-menu a[href^="#"]');
 
-// DRAGGABLE PLAYER
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === `#${entry.target.id}`);
+        });
+      }
+    });
+  }, { rootMargin: '-50% 0px -45% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+}
+
+// =========================================
+// 10. DRAGGABLE PLAYER
+// =========================================
 let isDragging = false;
-let offsetX, offsetY;
+let offsetX = 0, offsetY = 0;
 
-const startDrag = (e) => {
-    // Kiểm tra nếu bấm vào nút hoặc thanh progress thì không kéo
-    if (e.target.closest('button') || e.target.closest('.progress-container') || e.target.closest('.playlist')) return;
+function getClientXY(e) {
+  if (e.touches && e.touches.length) {
+    return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }
+  return { x: e.clientX, y: e.clientY };
+}
 
-    isDragging = true;
-    const rect = player.getBoundingClientRect();
-    
-    // Lấy tọa độ (hỗ trợ cả Touch và Mouse)
-    const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-    const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+function startDrag(e) {
+  if (e.target.closest('button') ||
+      e.target.closest('.progress-container') ||
+      e.target.closest('.playlist')) return;
 
-    offsetX = clientX - rect.left;
-    offsetY = clientY - rect.top;
-    player.style.transition = 'none';
-};
+  isDragging = true;
+  const rect = player.getBoundingClientRect();
+  const { x, y } = getClientXY(e);
+  offsetX = x - rect.left;
+  offsetY = y - rect.top;
+  player.style.transition = 'none';
+}
 
-const dragging = (e) => {
-    if (!isDragging) return;
-    
-    // Ngăn chặn cuộn trang trên mobile khi đang kéo
-    if (e.type === 'touchmove') e.preventDefault();
+function onDrag(e) {
+  if (!isDragging) return;
+  if (e.type === 'touchmove') e.preventDefault();
 
-    const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-    const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+  const { x, y } = getClientXY(e);
+  const maxX = window.innerWidth  - player.offsetWidth;
+  const maxY = window.innerHeight - player.offsetHeight;
+  const nx   = Math.max(0, Math.min(x - offsetX, maxX));
+  const ny   = Math.max(0, Math.min(y - offsetY, maxY));
 
-    let x = clientX - offsetX;
-    let y = clientY - offsetY;
+  player.style.left   = `${nx}px`;
+  player.style.top    = `${ny}px`;
+  player.style.right  = 'auto';
+  player.style.bottom = 'auto';
+}
 
-    const maxX = window.innerWidth - player.offsetWidth;
-    const maxY = window.innerHeight - player.offsetHeight;
-    
-    x = Math.max(0, Math.min(x, maxX));
-    y = Math.max(0, Math.min(y, maxY));
+function stopDrag() {
+  if (!isDragging) return;
+  isDragging = false;
+  player.style.transition = 'box-shadow 0.25s ease';
+}
 
-    player.style.left = `${x}px`;
-    player.style.top = `${y + 65}px`;
-    player.style.right = 'auto';
-};
+function keepPlayerInBounds() {
+  const rect = player.getBoundingClientRect();
+  const maxX = window.innerWidth  - rect.width;
+  const maxY = window.innerHeight - rect.height;
+  player.style.left   = `${Math.max(0, Math.min(rect.left, maxX))}px`;
+  player.style.top    = `${Math.max(0, Math.min(rect.top,  maxY))}px`;
+  player.style.right  = 'auto';
+  player.style.bottom = 'auto';
+}
 
-const stopDrag = () => {
-    if (isDragging) {
-        isDragging = false;
-        player.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-    }
-};
+player.addEventListener('mousedown',  startDrag);
+document.addEventListener('mousemove', onDrag);
+document.addEventListener('mouseup',   stopDrag);
 
-// Sự kiện Chuột
-player.addEventListener('mousedown', startDrag);
-document.addEventListener('mousemove', dragging);
-document.addEventListener('mouseup', stopDrag);
-
-// Sự kiện Chạm (Mobile)
 player.addEventListener('touchstart', startDrag, { passive: false });
-document.addEventListener('touchmove', dragging, { passive: false });
-document.addEventListener('touchend', stopDrag);
+document.addEventListener('touchmove', onDrag,   { passive: false });
+document.addEventListener('touchend',  stopDrag);
 
-// Easter Egg
-// Chặn chuột phải
-document.addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-    alert("Menu is blocked in this web :))");
+// =========================================
+// 11. EASTER EGGS
+// =========================================
+
+// Block right-click
+document.addEventListener('contextmenu', e => {
+  e.preventDefault();
+  // Silent block — no alert (less annoying UX)
 });
 
+// Konami code
+const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+let konamiIdx = 0;
 
-const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-let konamiIndex = 0;
-
-document.addEventListener('keydown', (e) => {
-    if (e.key === konamiCode[konamiIndex]) {
-        konamiIndex++;
-        if (konamiIndex === konamiCode.length) {
-            activateEasterEgg();
-            // activateRedAlert();
-            konamiIndex = 0;
-        }
-    } else {
-        konamiIndex = 0;
+document.addEventListener('keydown', e => {
+  if (e.key === KONAMI[konamiIdx]) {
+    konamiIdx++;
+    if (konamiIdx === KONAMI.length) {
+      activateEasterEgg();
+      konamiIdx = 0;
     }
+  } else {
+    konamiIdx = 0;
+  }
 });
 
 function activateEasterEgg() {
-    alert("SYSTEM OVERRIDE: Admin Access Granted!");
-    // triggerSecurityRed()
-    document.body.style.filter = "hue-rotate(240deg) brightness(1.2) contrast(1.5)";
-
+  document.body.style.filter = "hue-rotate(240deg) brightness(1.15) contrast(1.4)";
+  if (statusText) statusText.textContent = "SYSTEM OVERRIDE";
+  setTimeout(() => {
+    document.body.style.filter = "";
+    if (statusText) statusText.textContent = music.paused ? "OFFLINE" : "ONLINE";
+  }, 3000);
 }
-// console devtool 
+
+// Click-5-times easter egg on username
+let clickCount = 0;
+const eggEl = document.querySelector('#easter_egg');
+if (eggEl) {
+  eggEl.addEventListener('click', () => {
+    clickCount++;
+    if (clickCount >= 5) {
+      clickCount = 0;
+      document.body.classList.add('glitch-active');
+      if (statusText) statusText.textContent = "CRITICAL_FAILURE";
+      setTimeout(() => {
+        document.body.classList.remove('glitch-active');
+        if (statusText) statusText.textContent = music.paused ? "OFFLINE" : "ONLINE";
+      }, 2000);
+    }
+  });
+}
+
+// =========================================
+// 12. CONSOLE BRANDING
+// =========================================
 console.clear();
 console.log(
-    `%c STOP! %c\n\nFriend đang cố gắng thâm nhập hệ thống ?\nĐây là khu vực bảo mật. Chúc bạn may mắn, Hacker!`,
-    "color: red; font-size: 40px; font-weight: bold; -webkit-text-stroke: 1px black;",
-    "color: #00ff41; font-size: 16px;"
+  `%c STOP! %c\n\nTrying to hack this site?\nThis IS a security researcher's portfolio — good luck! 😏`,
+  "color:#ff0000;font-size:36px;font-weight:bold;",
+  "color:#00ff41;font-size:14px;"
 );
+console.log(
+  `%c
+███████╗███████╗██████╗ ██╗      █████╗  ██████╗ 
+╚══███╔╝██╔════╝██╔══██╗██║     ██╔══██╗██╔═══██╗
+  ███╔╝ █████╗  ██████╔╝██║     ███████║██║   ██║
+ ███╔╝  ██╔══╝  ██╔═══╝ ██║     ██╔══██║██║   ██║
+███████╗███████╗██║     ███████╗██║  ██║╚██████╔╝
+╚══════╝╚══════╝╚═╝     ╚══════╝╚═╝  ╚═╝ ╚═════╝ 
+`,
+  "color:#00ff41;"
+);
+// Silence console after branding
+const noop = () => {};
+console.log   = noop;
+console.warn  = noop;
+console.error = noop;
 
-console.log(`%c
-███╗   ██╗ ██████╗ ████████╗    ███████╗ ██████╗ ██████╗     ██╗   ██╗ ██████╗ ██╗   ██╗      ███╗   ██╗ █████╗ ██╗  ██╗    ██╗██╗██╗██╗
-████╗  ██║██╔═══██╗╚══██╔══╝    ██╔════╝██╔═══██╗██╔══██╗    ╚██╗ ██╔╝██╔═══██╗██║   ██║      ████╗  ██║██╔══██╗██║  ██║    ██║██║██║██║
-██╔██╗ ██║██║   ██║   ██║       █████╗  ██║   ██║██████╔╝     ╚████╔╝ ██║   ██║██║   ██║      ██╔██╗ ██║███████║███████║    ██║██║██║██║
-██║╚██╗██║██║   ██║   ██║       ██╔══╝  ██║   ██║██╔══██╗      ╚██╔╝  ██║   ██║██║   ██║      ██║╚██╗██║██╔══██║██╔══██║    ╚═╝╚═╝╚═╝╚═╝
-██║ ╚████║╚██████╔╝   ██║       ██║     ╚██████╔╝██║  ██║       ██║   ╚██████╔╝╚██████╔╝ ▄█╗  ██║ ╚████║██║  ██║██║  ██║    ██╗██╗██╗██╗
-╚═╝  ╚═══╝ ╚═════╝    ╚═╝       ╚═╝      ╚═════╝ ╚═╝  ╚═╝       ╚═╝    ╚═════╝  ╚═════╝  ╚═╝  ╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝    ╚═╝╚═╝╚═╝╚═╝
-`, "color: #ff0000;");
-console.log = () => {};
-console.warn = () => {};
-console.error = () => {};
-
-function activateRedAlert() { 
-    // Xoay màu từ Xanh Neon sang Đỏ
-    document.body.style.filter = "hue-rotate(240deg) brightness(1.2) contrast(1.5)";
-    
-    // Thêm hiệu ứng rung lắc (nếu đã thêm CSS glitch ở bước trước)
-    document.body.classList.add('glitch-active');
-    
-    if (statusText) {
-        statusText.innerText = "SECURITY_BREACH_DETECTED";
-        statusText.style.color = "white"; // Màu chữ nổi bật trên nền đỏ
-    }
+// ==========================================
+// 13. UTILITY
+// ==========================================
+function debounce(fn, delay) {
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...args), delay);
+  };
 }
-let clickCount = 0;
-const logo = document.querySelector('#easter_egg'); 
-
-logo.addEventListener('click', () => {
-    clickCount++;
-    
-    if (clickCount === 5) {
-        // Thêm class hiệu ứng vào cả body hoặc canvas
-        document.body.classList.add('glitch-active');
-        
-        if (statusText) {
-            statusText.innerText = "CRITICAL_SYSTEM_FAILURE";
-            statusText.style.color = "#ff0000";
-        }
-
-        // Sau 2 giây thì hồi phục hệ thống
-        setTimeout(() => {
-            document.body.classList.remove('glitch-active');
-            if (statusText) {
-                statusText.innerText = "SYSTEM_RESTORED";
-                statusText.style.color = "var(--neon-green)";
-            }
-            clickCount = 0;
-        }, 2000);
-    }
-});
-
-
