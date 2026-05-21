@@ -163,7 +163,9 @@ function toggleSkill(btn) {
 function loadAudio() {
   music.src = AUDIO_FILE;
   music.preload = "metadata";
-  music.load();
+  // Không gọi music.load() — để browser tự quyết, tránh buffer toàn bộ 56MB
+  currentTimeEl.textContent  = "00:00:00";
+  durationTimeEl.textContent = "00:00:00";
   updateTrackDisplay(0);
 }
 
@@ -331,22 +333,21 @@ function togglePlaylist() {
   if (isOpen) updatePlaylistUI(); // scroll active into view
 }
 
+/**
+ * Format seconds → "HH:MM:SS"
+ * Dùng chung cho player display và playlist timestamp
+ */
 function formatTime(s) {
-  if (isNaN(s) || s < 0) return "00:00:00";
-  const h   = Math.floor(s / 3600);
-  const m   = Math.floor((s % 3600) / 60);
-  const sec = Math.floor(s % 60);
-  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+  const t = Number(s);
+  if (!isFinite(t) || t < 0) return "00:00:00";
+  const h   = Math.floor(t / 3600);
+  const m   = Math.floor((t % 3600) / 60);
+  const sec = Math.floor(t % 60);
+  return [h, m, sec].map(v => String(v).padStart(2, '0')).join(':');
 }
 
-/** Format chỉ dùng cho timestamp ngắn trong playlist (bỏ giờ nếu = 0) */
-function formatChapterTime(s) {
-  if (isNaN(s) || s < 0) return "00:00:00";
-  const h   = Math.floor(s / 3600);
-  const m   = Math.floor((s % 3600) / 60);
-  const sec = Math.floor(s % 60);
-  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-}
+// Alias — playlist dùng cùng format
+const formatChapterTime = formatTime;
 
 // =========================================
 // 9. NAVIGATION
