@@ -47,15 +47,12 @@ const TYPEWRITER_MSG = "Security Researcher // CTF Player // Bug Bounty Hunter";
 let typeIndex = 0;
 let currentTrackIndex = 0;
 
-
 // Matrix
 const canvas  = document.getElementById('matrixCanvas');
 const ctx     = canvas.getContext('2d');
 let columns, drops;
 const LETTERS   = "01アイウエオカキクケコABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const FONT_SIZE = 14;
-
-
 
 // Player DOM refs (cached once)
 const music          = document.getElementById("bgMusic");
@@ -292,7 +289,7 @@ function initPlaylist() {
 
     const num  = document.createElement('span');
     num.className = 'track-num';
-    num.textContent = formatTime(track.start) + " ";
+    num.textContent = formatChapterTime(track.start) + " ";
 
     const name = document.createTextNode(track.name);
 
@@ -335,10 +332,20 @@ function togglePlaylist() {
 }
 
 function formatTime(s) {
-  if (isNaN(s) || s < 0) return "00:00";
-  const m = Math.floor(s / 60);
+  if (isNaN(s) || s < 0) return "00:00:00";
+  const h   = Math.floor(s / 3600);
+  const m   = Math.floor((s % 3600) / 60);
   const sec = Math.floor(s % 60);
-  return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+
+/** Format chỉ dùng cho timestamp ngắn trong playlist (bỏ giờ nếu = 0) */
+function formatChapterTime(s) {
+  if (isNaN(s) || s < 0) return "00:00:00";
+  const h   = Math.floor(s / 3600);
+  const m   = Math.floor((s % 3600) / 60);
+  const sec = Math.floor(s % 60);
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
 }
 
 // =========================================
@@ -528,9 +535,9 @@ console.log   = noop;
 console.warn  = noop;
 console.error = noop;
 
-// ==========================================
+// =========================================
 // 13. UTILITY
-// ==========================================
+// =========================================
 function debounce(fn, delay) {
   let t;
   return (...args) => {

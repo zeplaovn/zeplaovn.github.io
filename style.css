@@ -953,8 +953,14 @@ img { max-width: 100%; }
 .time-display {
   display: flex;
   justify-content: space-between;
-  font-size: 0.68rem;
+  font-size: 0.65rem;
   color: var(--text-dim);
+  letter-spacing: 0.5px;
+}
+
+#currentTime, #durationTime {
+  min-width: 52px; /* đủ rộng cho HH:MM:SS */
+  font-variant-numeric: tabular-nums; /* số không nhảy width */
 }
 
 .player-controls {
